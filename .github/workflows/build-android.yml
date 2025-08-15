@@ -28,19 +28,46 @@ jobs:
         
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
-      
+      with:
+        api-level: 33
+        build-tools: 33.0.1
+        platform: android-33
+        
+    - name: Verify Java version
+      run: |
+        echo "=== Java Version Check ==="
+        java -version
+        echo "JAVA_HOME: $JAVA_HOME"
+        echo "Java major version:"
+        java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f1
+        echo "=== End Java Version Check ==="
+        
+    - name: Verify Android SDK tools compatibility
+      run: |
+        echo "=== Android SDK Tools Check ==="
+        echo "Android SDK location: $ANDROID_HOME"
+        echo "Build tools available:"
+        ls -la $ANDROID_HOME/build-tools/
+        echo "Platforms available:"
+        ls -la $ANDROID_HOME/platforms/
+        echo "Checking build tools version compatibility:"
+        $ANDROID_HOME/build-tools/33.0.1/aapt version
+        echo "=== End Android SDK Tools Check ==="
+        
     - name: Debug Java and Android setup
       run: |
+        echo "=== Environment Check ==="
         echo "Java version:"
         java -version
-        echo "JAVA_HOME:"
-        echo $JAVA_HOME
-        echo "Android SDK location:"
-        echo $ANDROID_HOME
-        echo "Android SDK tools:"
+        echo "JAVA_HOME: $JAVA_HOME"
+        echo "Android SDK location: $ANDROID_HOME"
+        echo "Android SDK build-tools:"
         ls -la $ANDROID_HOME/build-tools/
-        echo "Gradle wrapper test:"
+        echo "Android SDK platforms:"
+        ls -la $ANDROID_HOME/platforms/
+        echo "=== Gradle Wrapper Test ==="
         ./gradlew --version
+        echo "=== End Environment Check ==="
       
 
           
@@ -49,13 +76,23 @@ jobs:
       
     - name: Verify Gradle setup
       run: |
+        echo "=== Gradle Setup Verification ==="
         echo "Gradle version:"
         ./gradlew --version
-        echo "Available tasks:"
-        ./gradlew tasks --all | grep -E "(android|assemble)"
+        echo "Available Android tasks:"
+        ./gradlew tasks --all | grep -E "(android|assemble)" | head -5
+        echo "=== End Gradle Setup Verification ==="
       
     - name: Build APK
-      run: ./gradlew android:assembleRelease
+      run: |
+        echo "=== Starting APK Build ==="
+        echo "Using Java version:"
+        java -version
+        echo "Using Android build tools:"
+        ls -la $ANDROID_HOME/build-tools/
+        echo "Building APK..."
+        ./gradlew android:assembleRelease
+        echo "=== APK Build Complete ==="
       
     - name: Sign APK
       run: |
