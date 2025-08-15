@@ -16,19 +16,15 @@ jobs:
     - name: 🚀 Checkout code
       uses: actions/checkout@v4
 
-    - name: 📱 Set up JDK 11
+    - name: 📱 Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
         cache: 'gradle'
 
     - name: 🤖 Set up Android SDK
       uses: android-actions/setup-android@v2
-      with:
-        api-level: '30'
-        build-tools: '30.0.3'
-        platform: '30'
 
     - name: 🔧 Make gradlew executable
       run: chmod +x gradlew
@@ -39,7 +35,7 @@ jobs:
         echo "📦 Version: $(grep 'version =' build.gradle | cut -d"'" -f2)"
         echo "🔑 Using public keystore: android/keystore/open-remix.keystore"
         echo "📱 Target SDK: 30 (Android 11)"
-        echo "📱 Min SDK: 26 (Android 8.0+)"
+        echo "📱 Min SDK: 21 (Android 5.0+)"
         echo ""
         echo "🔍 Environment check:"
         echo "Java version:"
@@ -57,13 +53,13 @@ jobs:
     - name: 🔨 Build Debug APK
       run: |
         echo "🏗️  Building debug APK..."
-        ./gradlew :android:assembleDebug --stacktrace --info
+        ./gradlew :android:assembleDebug --stacktrace --info --warning-mode all
       continue-on-error: true
 
     - name: 🔨 Build Release APK
       run: |
         echo "🏗️  Building release APK..."
-        ./gradlew :android:assembleRelease --stacktrace --info
+        ./gradlew :android:assembleRelease --stacktrace --info --warning-mode all
       continue-on-error: true
 
     - name: ✅ Check APK files
@@ -119,7 +115,7 @@ jobs:
         
         1. **Download the APK** from the artifacts above
         2. **Enable "Install from unknown sources"** in your Android settings
-        3. **Install the APK** on your Android 8.0+ device
+        3. **Install the APK** on your Android 5.0+ device
         4. **Enjoy the rhythm-based monster hunting!** 🎵⚔️
         
         ## 🎵 MIFF Movement
