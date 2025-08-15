@@ -5,8 +5,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-// Ensure consistent compilation options across tasks
-tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 8 }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 
 sourceSets {
     main {

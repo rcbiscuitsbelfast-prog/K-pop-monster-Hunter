@@ -15,87 +15,136 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    # 1) Checkout repository
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17
+    # 2) JDK 17 for Android SDK compatibility
+    - name: Set up JDK 17 (Temurin)
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: 'gradle'
 
+    # 3) Install Android command-line tools
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
 
-    - name: Make gradlew executable
-      run: chmod +x gradlew
+    # 4) Install required SDKs and Build-Tools (both modern and legacy for compatibility)
+    - name: Install Android SDK components
+      shell: bash
+      run: |
+        set -euo pipefail
+        yes | sdkmanager --licenses >/dev/null || true
+        sdkmanager \
+          "platform-tools" \
+          "platforms;android-35" "build-tools;35.0.0" \
+          "platforms;android-30" "build-tools;30.0.3"
 
-    - name: Build APK
-      run: ./gradlew --no-daemon :android:assembleRelease
+    # 5) Verify required tools (aapt2, zipalign, apksigner)
+    - name: Verify Android build tools
+      shell: bash
+      run: |
+        set -euo pipefail
+        BUILD_TOOLS_DIR=$(ls -1d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -n 1)
+        echo "Using build-tools at: $BUILD_TOOLS_DIR"
+        ls -la "$BUILD_TOOLS_DIR"
+        if [ -x "$BUILD_TOOLS_DIR/aapt2" ]; then "$BUILD_TOOLS_DIR/aapt2" help | head -n 3 || true; fi
+        "$BUILD_TOOLS_DIR/zipalign" -h | head -n 5
+        "$BUILD_TOOLS_DIR/apksigner" version || true
 
+    # 6) Ensure Gradle wrapper is executable and present
+    - name: Ensure Gradle wrapper
+      shell: bash
+      run: |
+        set -euo pipefail
+        chmod +x ./gradlew
+        ls -la gradle/wrapper || true
+
+    # 7) Build release APK with verbose logging
+    - name: Build APK (assembleRelease)
+      run: ./gradlew --no-daemon --info --warning-mode all assembleRelease
+
+    # 8) Align and sign APK
+    #    - Uses keystore from secrets if provided; otherwise generates one
+    #    - Uses unique alias 'kpopmonsterhunter' to avoid conflicts
     - name: Align and sign APK
       env:
         KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-        KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
-        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'kpopmonsterhunter' }}
-        KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
+        KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      shell: bash
       run: |
         set -euo pipefail
         APK_DIR=android/build/outputs/apk/release
         APK_UNSIGNED=$APK_DIR/android-release-unsigned.apk
-        APK_ALIGNED=$APK_DIR/Unlucky-aligned.apk
-        APK_SIGNED=$APK_DIR/Unlucky.apk
+        APK_ALIGNED=$APK_DIR/KpopMonsterHunter-aligned.apk
+        APK_SIGNED=$APK_DIR/KpopMonsterHunter.apk
 
-        # Resolve build-tools path (pick the latest)
+        # Pick latest build-tools
         BUILD_TOOLS_DIR=$(ls -1d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -n 1)
         ZIPALIGN_BIN="$BUILD_TOOLS_DIR/zipalign"
         APKSIGNER_BIN="$BUILD_TOOLS_DIR/apksigner"
 
+        # Verify input exists
         if [ ! -f "$APK_UNSIGNED" ]; then
           echo "Missing input APK: $APK_UNSIGNED" >&2
           ls -la "$APK_DIR" || true
           exit 1
         fi
 
-        # Keystore: use provided base64 or create if missing; ensure alias exists
+        # Defaults for secrets if not provided
+        KEY_ALIAS="${KEY_ALIAS:-kpopmonsterhunter}"
+        KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD:-android}"
+        KEY_PASSWORD="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
+
+        # Restore or create keystore, ensure alias exists
         if [ -n "${KEYSTORE_BASE64:-}" ]; then
           echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
         fi
         if [ -f keystore.jks ]; then
-          if keytool -list -v -keystore keystore.jks -storepass ${KEYSTORE_PASSWORD:-android} | grep -q "Alias name: ${KEY_ALIAS:-kpopmonsterhunter}"; then
-            echo "Keystore exists with alias ${KEY_ALIAS:-kpopmonsterhunter}."
+          if keytool -list -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" | grep -q "Alias name: $KEY_ALIAS"; then
+            echo "Keystore exists with alias $KEY_ALIAS."
           else
-            echo "Keystore exists but alias missing; generating alias ${KEY_ALIAS:-kpopmonsterhunter}."
-            keytool -genkeypair -v -keystore keystore.jks -storepass ${KEYSTORE_PASSWORD:-android} \
-              -keyalg RSA -keysize 2048 -validity 10000 -alias ${KEY_ALIAS:-kpopmonsterhunter} -keypass ${KEY_PASSWORD:-${KEYSTORE_PASSWORD:-android}} \
+            echo "Keystore exists but alias missing; creating alias $KEY_ALIAS."
+            keytool -genkeypair -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" \
+              -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASSWORD" \
               -dname "CN=Android,O=Android,C=US"
           fi
         else
-          echo "Creating keystore with alias ${KEY_ALIAS:-kpopmonsterhunter}."
-          keytool -genkeypair -v -keystore keystore.jks -storepass ${KEYSTORE_PASSWORD:-android} \
-            -keyalg RSA -keysize 2048 -validity 10000 -alias ${KEY_ALIAS:-kpopmonsterhunter} -keypass ${KEY_PASSWORD:-${KEYSTORE_PASSWORD:-android}} \
+          echo "Creating keystore with alias $KEY_ALIAS."
+          keytool -genkeypair -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" \
+            -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASSWORD" \
             -dname "CN=Android,O=Android,C=US"
         fi
 
+        # Align with page alignment (-p)
         "$ZIPALIGN_BIN" -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
+        # Verify alignment
         "$ZIPALIGN_BIN" -c -v 4 "$APK_ALIGNED"
+        # Sign APK
         "$APKSIGNER_BIN" sign \
-          --ks keystore.jks --ks-key-alias ${KEY_ALIAS:-kpopmonsterhunter} \
-          --ks-pass pass:${KEYSTORE_PASSWORD:-android} --key-pass pass:${KEY_PASSWORD:-${KEYSTORE_PASSWORD:-android}} \
+          --ks keystore.jks --ks-key-alias "$KEY_ALIAS" \
+          --ks-pass pass:"$KEYSTORE_PASSWORD" --key-pass pass:"$KEY_PASSWORD" \
           --out "$APK_SIGNED" "$APK_ALIGNED"
+        # Verify signature
         "$APKSIGNER_BIN" verify -v "$APK_SIGNED"
         ls -la "$APK_DIR"
 
+    # 9) Upload final signed APK as artifact
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Unlucky-APK
-        path: android/build/outputs/apk/release/Unlucky.apk
+        name: KpopMonsterHunter-APK
+        path: android/build/outputs/apk/release/KpopMonsterHunter.apk
         retention-days: 30
 
+    # 10) Optional GitHub Release
     - name: Get version
       id: get_version
+      shell: bash
       run: |
         if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
           echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
@@ -103,19 +152,17 @@ jobs:
           echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
         fi
 
-    - name: Create Release
+    - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ steps.get_version.outputs.version }}
         name: Release v${{ steps.get_version.outputs.version }}
         body: |
-          Android APK for Unlucky game v${{ steps.get_version.outputs.version }}
+          K-pop Monster Hunter APK v${{ steps.get_version.outputs.version }}
 
-          ## Installation
-          1. Download the APK file
-          2. Enable "Install from unknown sources" in your Android settings
-          3. Install the APK
-        files: android/build/outputs/apk/release/Unlucky.apk
+          - Built with JDK 17, AGP 8, and Gradle 8
+          - Aligned with zipalign and signed with apksigner
+        files: android/build/outputs/apk/release/KpopMonsterHunter.apk
         draft: false
         prerelease: false
       env:
