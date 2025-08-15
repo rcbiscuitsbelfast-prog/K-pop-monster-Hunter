@@ -3,6 +3,13 @@ apply plugin: "java-library"
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+dependencies {
+    implementation project(":core")
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+}
+
 project.ext.mainClassName = "com.unlucky.main.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../android/assets");
 
