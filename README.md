@@ -1,5 +1,5 @@
 
-# Unlucky 
+# Lucky 
 Unlucky is a LibGDX Android RPG game based on RNG (random number generator) with a turn-based battle system. RNG is usually frowned upon in games, but this game's entire theme is RNG. Everything from attacks in battle to item enchanting to movement is based on RNG. 
 <div>
     <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/44676899-856d7600-aa02-11e8-82ca-897e3ca45092.gif">
