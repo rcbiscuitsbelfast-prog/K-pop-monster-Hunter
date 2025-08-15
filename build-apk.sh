@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Build APK script for Unlucky game (modernized)
+# Build APK script for Lucky game (modernized)
 set -euo pipefail
 
-echo "Building Unlucky Android APK..."
+echo "Building Lucky Android APK..."
 
 # Ensure gradlew is executable
 chmod +x gradlew
@@ -22,8 +22,8 @@ echo "Building release APK..."
 
 APK_DIR="android/build/outputs/apk/release"
 APK_UNSIGNED="$APK_DIR/android-release-unsigned.apk"
-APK_ALIGNED="$APK_DIR/Unlucky-aligned.apk"
-APK_SIGNED="$APK_DIR/Unlucky.apk"
+APK_ALIGNED="$APK_DIR/Lucky-aligned.apk"
+APK_SIGNED="$APK_DIR/Lucky.apk"
 
 # Resolve zipalign and apksigner to a single binary path
 if command -v zipalign >/dev/null 2>&1; then
@@ -72,13 +72,13 @@ if [ "${1:-}" = "--sign" ]; then
             echo "Keystore exists but alias '$KEY_ALIAS' missing. Generating new key alias."
             keytool -genkeypair -v -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASS" \
                 -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASS" \
-                -dname "CN=Android,O=Android,C=US"
+                -dname "CN=Lucky,O=Android,C=US"
         fi
     else
         echo "Creating new keystore with alias '$KEY_ALIAS'..."
         keytool -genkeypair -v -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASS" \
             -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASS" \
-            -dname "CN=Android,O=Android,C=US"
+            -dname "CN=Lucky,O=Android,C=US"
     fi
 
     # Align with page alignment
