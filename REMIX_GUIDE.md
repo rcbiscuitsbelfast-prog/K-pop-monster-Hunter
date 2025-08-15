@@ -216,7 +216,7 @@ aapt dump badging android/build/outputs/apk/debug/android-debug.apk
 
 # Install and run on device
 ./gradlew :android:installDebug
-adb shell am start -n com.miff.kpopmonsterhunter/.AndroidLauncher
+adb shell am start -n com.miff.kpopmonsterhunter/com.unlucky.main.AndroidLauncher
 ```
 
 ## 📚 Resources
