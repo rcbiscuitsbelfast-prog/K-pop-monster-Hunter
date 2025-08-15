@@ -1,39 +1,44 @@
 #!/bin/bash
 
-# Build APK script for Unlucky game
-# This script helps build the Android APK locally
+# Build APK script for Unlucky game (modernized)
+set -euo pipefail
 
 echo "Building Unlucky Android APK..."
 
-# Make gradlew executable
+# Ensure gradlew is executable
 chmod +x gradlew
+
+# Display Java version for debugging
+echo "Java version:"
+java -version || true
 
 # Clean previous builds
 echo "Cleaning previous builds..."
-./gradlew clean
+./gradlew --no-daemon clean
 
 # Build release APK
 echo "Building release APK..."
-./gradlew android:assembleRelease
+./gradlew --no-daemon :android:assembleRelease
+
+APK_UNSIGNED="android/build/outputs/apk/release/android-release-unsigned.apk"
+APK_ALIGNED="android/build/outputs/apk/release/Unlucky.apk"
 
 # Check if build was successful
-if [ -f "android/build/outputs/apk/release/android-release-unsigned.apk" ]; then
+if [ -f "$APK_UNSIGNED" ]; then
     echo "✅ APK built successfully!"
-    echo "📱 APK location: android/build/outputs/apk/release/android-release-unsigned.apk"
-    echo "📏 APK size: $(du -h android/build/outputs/apk/release/android-release-unsigned.apk | cut -f1)"
+    echo "📱 APK location: $APK_UNSIGNED"
+    echo "📏 APK size: $(du -h "$APK_UNSIGNED" | cut -f1)"
     
-    # Optional: Sign the APK if you have a keystore
-    if [ "$1" = "--sign" ]; then
-        echo "🔐 Signing APK..."
-        if [ -f "keystore.jks" ]; then
-            jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks android/build/outputs/apk/release/android-release-unsigned.apk android
-            echo "✅ APK signed successfully!"
-        else
-            echo "⚠️  No keystore found. Creating debug keystore..."
+    if [ "${1:-}" = "--sign" ]; then
+        echo "🔐 Signing APK (debug key)..."
+        if [ ! -f "keystore.jks" ]; then
             keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias android -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
-            jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks android/build/outputs/apk/release/android-release-unsigned.apk android
-            echo "✅ APK signed with debug keystore!"
         fi
+        # Align
+        "$ANDROID_HOME"/build-tools/*/zipalign -v 4 "$APK_UNSIGNED" "$APK_ALIGNED"
+        # Sign with apksigner (preferred on modern SDKs)
+        "$ANDROID_HOME"/build-tools/*/apksigner sign --ks keystore.jks --ks-pass pass:android --key-pass pass:android --out "$APK_ALIGNED" "$APK_ALIGNED"
+        echo "✅ APK aligned and signed: $APK_ALIGNED"
     fi
 else
     echo "❌ APK build failed!"
