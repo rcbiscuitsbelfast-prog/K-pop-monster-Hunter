@@ -43,7 +43,7 @@ This project includes a comprehensive GitHub Actions workflow that automatically
 
 **Build System Requirements:**
 - Java 17 or higher
-- Android SDK with build tools 30.0.3
+- Android SDK with build tools 29.0.3
 - Gradle 8.3+
 
 ## Build System Improvements
@@ -54,7 +54,7 @@ This project has been modernized with the following technical improvements:
 - **Java Compatibility**: Upgraded from Java 8 to Java 17 for better performance and modern Android SDK support
 - **Gradle Version**: Updated to Gradle 8.3 with enhanced caching and build performance
 - **Android Gradle Plugin**: Upgraded to 8.1.4 for modern Android development features
-- **Build Tools**: Using reliable build tools 30.0.3 with full `aapt` and `aapt2` support
+- **Build Tools**: Using reliable build tools 29.0.3 with full `aapt` and `aapt2` support
 
 ### **GitHub Actions Workflow**
 - **Automated CI/CD**: Complete automated build and release pipeline
@@ -72,7 +72,7 @@ This project has been modernized with the following technical improvements:
 - **Minimum SDK**: Android API 21 (Android 5.0)
 - **Target SDK**: Android API 30 (Android 11)
 - **Compile SDK**: Android API 30
-- **Build Tools**: 30.0.3
+- **Build Tools**: 29.0.3
 - **Java Version**: 17
 - **Gradle Version**: 8.3
 
@@ -124,7 +124,7 @@ export JAVA_HOME=/path/to/java17
 echo $ANDROID_HOME
 
 # Install required build tools
-$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3"
+$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;29.0.3"
 ```
 
 **Gradle Issues:**

@@ -30,7 +30,7 @@ jobs:
       uses: android-actions/setup-android@v2
       with:
         api-level: 30
-        build-tools: 30.0.3
+        build-tools: 29.0.3
         platform: android-30
         
     - name: Verify Java version
@@ -51,21 +51,36 @@ jobs:
         echo "Platforms available:"
         ls -la $ANDROID_HOME/platforms/
         echo "Checking build tools version compatibility:"
-        $ANDROID_HOME/build-tools/30.0.3/aapt version
+        $ANDROID_HOME/build-tools/29.0.3/aapt version
         echo "Checking aapt2 availability:"
-        $ANDROID_HOME/build-tools/30.0.3/aapt2 version
+        $ANDROID_HOME/build-tools/29.0.3/aapt2 version
         echo "=== End Android SDK Tools Check ==="
         
     - name: Install build tools if missing
       run: |
         echo "=== Installing Build Tools ==="
-        if [ ! -f "$ANDROID_HOME/build-tools/30.0.3/aapt" ]; then
-          echo "Build tools 30.0.3 not found, installing..."
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;30.0.3"
+        if [ ! -f "$ANDROID_HOME/build-tools/29.0.3/aapt" ]; then
+          echo "Build tools 29.0.3 not found, installing..."
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;29.0.3"
         else
-          echo "Build tools 30.0.3 already installed"
+          echo "Build tools 29.0.3 already installed"
         fi
         echo "=== End Installing Build Tools ==="
+        
+    - name: Verify build tools installation
+      run: |
+        echo "=== Verifying Build Tools Installation ==="
+        echo "Checking for aapt:"
+        ls -la $ANDROID_HOME/build-tools/29.0.3/aapt
+        echo "Checking for aapt2:"
+        ls -la $ANDROID_HOME/build-tools/29.0.3/aapt2
+        echo "Checking for zipalign:"
+        ls -la $ANDROID_HOME/build-tools/29.0.3/zipalign
+        echo "Testing aapt version:"
+        $ANDROID_HOME/build-tools/29.0.3/aapt version
+        echo "Testing aapt2 version:"
+        $ANDROID_HOME/build-tools/29.0.3/aapt2 version
+        echo "=== End Verifying Build Tools Installation ==="
         
     - name: Debug Java and Android setup
       run: |
@@ -104,7 +119,7 @@ jobs:
         echo "Using Android build tools:"
         ls -la $ANDROID_HOME/build-tools/
         echo "Verifying aapt tool:"
-        $ANDROID_HOME/build-tools/30.0.3/aapt version
+        $ANDROID_HOME/build-tools/29.0.3/aapt version
         echo "Building APK..."
         ./gradlew android:assembleRelease
         echo "=== APK Build Complete ==="
@@ -118,7 +133,7 @@ jobs:
         jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks android/build/outputs/apk/release/android-release-unsigned.apk android
         
         # Optimize APK
-        $ANDROID_HOME/build-tools/30.0.3/zipalign -v 4 android/build/outputs/apk/release/android-release-unsigned.apk android/build/outputs/apk/release/Unlucky.apk
+        $ANDROID_HOME/build-tools/29.0.3/zipalign -v 4 android/build/outputs/apk/release/android-release-unsigned.apk android/build/outputs/apk/release/Unlucky.apk
         
         # Verify APK was created
         ls -la android/build/outputs/apk/release/
