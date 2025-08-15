@@ -1,68 +1,217 @@
+# 🎮 K-pop Monster Hunter Remix
 
-# Unlucky 
-Unlucky is a LibGDX Android RPG game based on RNG (random number generator) with a turn-based battle system. RNG is usually frowned upon in games, but this game's entire theme is RNG. Everything from attacks in battle to item enchanting to movement is based on RNG. 
-<div>
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/44676899-856d7600-aa02-11e8-82ca-897e3ca45092.gif">
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/44678123-9e2b5b00-aa05-11e8-93ab-d9d0c693ddfa.gif">
-</div>
+> **A 2D action-platformer with rhythm-based combat, built for the MIFF (Make It For Free) movement**
 
-## About
+[![Build Status](https://github.com/your-username/kpop-monster-hunter-remix/workflows/Auto-Build%20K-pop%20Monster%20Hunter%20Remix%20APK/badge.svg)](https://github.com/your-username/kpop-monster-hunter-remix/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MIFF Movement](https://img.shields.io/badge/MIFF-Make%20It%20For%20Free-blue.svg)](https://makeitforfree.org)
 
-The player ventures and battles monsters in maps with various themes. Currently there are three available worlds all with 10+ levels in each world. In these maps, the player will have to defeat monsters and find a star tile to complete the level. Monsters may drop items that can improve the player's strength. These items may be sold in the shop for gold or enchanted to increase their power. There are currently 100+ items dropped by monsters and sold in the shop.
+## 🎵 About
 
-The battle system is based on turn-based mechanics. The player is given four randomly generated moves with each color corresponding to a different type of move. The player also has access to special moves that they can choose in the menu. Special moves give bonus effects to the player's attacks or affects the enemy. The player also has an option to run from the battle at a very low chance of success.
+**K-pop Monster Hunter Remix** is an open-source 2D action-platformer that combines rhythm-based combat with monster hunting mechanics. Built on the LibGDX framework, it demonstrates how to create fully remixable games with automatic CI/CD, public keystores, and zero barriers to contribution.
 
-## Downloads
-Releases for Desktop are found on the [releases page](https://github.com/mingli1/Unlucky/releases). It is in a runnable .jar format so you must have JRE installed. 
+### 🌟 Features
 
-Note: running the game on desktop will create a `save.json` file in the same directory as the game. The game must be run in the same directory as the save.json to work and load your progress.
+- **🎵 Rhythm-Based Combat**: Time your attacks to the beat for maximum damage
+- **⚔️ Monster Hunting**: Battle various creatures with unique patterns
+- **📱 Mobile-First**: Optimized for Android 8.0+ devices
+- **🔄 Fully Remixable**: Open source code and assets under MIT license
+- **🤖 Auto-Build**: GitHub Actions automatically builds APKs on every change
+- **🔑 Public Keystore**: No secrets, no manual signing required
 
-Also available for free on the [Google Play Store](https://play.google.com/store/apps/details?id=com.unlucky.main)
+## 🚀 Quick Start
 
-### Building Android APK
-This project includes a GitHub Actions workflow that automatically builds and releases Android APK files. To trigger a build:
-
-1. **Automatic Release**: Push a tag starting with 'v' (e.g., `v1.0.0`) to trigger an automatic build and release
-2. **Manual Build**: Go to the Actions tab in GitHub and manually trigger the "Build Android APK" workflow
-
-The workflow will:
-- Build a signed APK file
-- Create a GitHub release with the APK as a downloadable asset
-- Upload the APK as a build artifact for debugging
-
-To build locally:
+### One-Command Build
 ```bash
-./gradlew android:assembleRelease
+# Clone and build
+git clone https://github.com/your-username/kpop-monster-hunter-remix.git
+cd kpop-monster-hunter-remix
+./build-apk.sh
 ```
 
-The assets for this game are also available for download:
-* [Textures](https://github.com/mingli1/Unlucky/files/2300518/textures.zip) (contains a file `textures.png` that has all the textures in the game mapped into an atlas `textures.atlas`)
-* [Skins](https://github.com/mingli1/Unlucky/files/2300523/skins.zip) (contains LibGDX Skins of the game)
-* [Music](https://github.com/mingli1/Unlucky/files/2300525/music.zip) (all music in the game in `.ogg` format)
-* [Sound Effects](https://github.com/mingli1/Unlucky/files/2300530/sfx.zip) (all sfx in the game mostly in `.ogg` format)
+### Mobile Development (Termux)
+```bash
+# Install on Android device
+pkg install openjdk-17 gradle git
+git clone https://github.com/your-username/kpop-monster-hunter-remix.git
+cd kpop-monster-hunter-remix
+./mobile-build.sh
+```
 
-## Credits
-* Programming - done by me using Java 8 and the [LibGDX library](https://libgdx.badlogicgames.com/)
-* Artwork - done by me using [Paint.net](https://www.getpaint.net/) and textures packed using [Gdx Texture Packer GUI](https://github.com/crashinvaders/gdx-texture-packer-gui)
-* Music - done by me using [Bosca Cecilo](https://boscaceoil.net/)
-* Sound Effects - all sound effects are under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/) from [Freesound](https://freesound.org/) and edited by me using [Audacity](https://www.audacityteam.org/)
+## 📱 Download
 
-## License
-This project is licensed under the [MIT License](https://github.com/mingli1/Unlucky/blob/master/LICENSE).
+- **Latest APK**: [GitHub Actions Artifacts](https://github.com/your-username/kpop-monster-hunter-remix/actions)
+- **Releases**: [GitHub Releases](https://github.com/your-username/kpop-monster-hunter-remix/releases)
+- **Direct Build**: Run `./build-apk.sh` locally
 
-## Screenshots
-<div>
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/42198355-8515a9ee-7e55-11e8-9c5a-9b85f8211ac4.PNG">
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/42197174-8c740a06-7e4f-11e8-9280-21c1850ceb48.PNG">
-</div>
-<div>
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/42197176-912aed08-7e4f-11e8-8754-b4889dfb540f.PNG">
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/42197178-932f6f20-7e4f-11e8-9c49-6e4108ee0c26.PNG">
-</div>
-<div>
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/42197185-97c8b802-7e4f-11e8-879d-605d42c9260e.PNG">
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/42197189-9b425a06-7e4f-11e8-8e76-d7c3de9c2a28.PNG">
-</div>
-<div>
-    <img width="400px" height="240px" hspace="15" src="https://user-images.githubusercontent.com/29984767/42197192-9db252c8-7e4f-11e8-80c5-4812fa018eae.PNG">
-</div>
+## 🎯 MIFF Movement
+
+This project is part of the **Make It For Free** movement, demonstrating:
+
+- ✅ **Public Keystore**: `android/keystore/open-remix.keystore`
+- ✅ **No Secrets**: Everything committed to repository
+- ✅ **Auto-Build**: CI/CD on every code change
+- ✅ **Mobile-Friendly**: Works on Termux and mobile devices
+- ✅ **Fully Remixable**: MIT license, open assets
+
+## 🔧 Build System
+
+### Public Keystore Details
+- **Location**: `android/keystore/open-remix.keystore`
+- **Alias**: `remixkey`
+- **Password**: `remixpass`
+- **No secrets required** - everything is public!
+
+### Build Commands
+```bash
+# Release build (recommended)
+./gradlew :android:assembleRelease
+
+# Debug build (faster development)
+./gradlew :android:assembleDebug
+
+# Clean build
+./gradlew clean
+
+# Install on connected device
+./gradlew :android:installDebug
+```
+
+## 🤖 CI/CD Pipeline
+
+The project automatically builds APKs on every push to:
+- `core/` (gameplay logic)
+- `android/` (Android-specific code)
+- `desktop/` (desktop version)
+- Build configuration files
+
+### Workflow Features
+- 🚀 **Automatic APK building** on code changes
+- 🔑 **Public keystore signing** (no secrets needed)
+- 📤 **Artifact upload** for easy download
+- 🏷️ **GitHub Releases** for main branch builds
+- ✅ **Build verification** and APK info display
+
+## 🎨 Game Architecture
+
+### Modular Design
+```
+├── core/           # Platform-agnostic game logic
+├── android/        # Android-specific implementation
+├── desktop/        # Desktop version for development
+└── assets/         # Shared game resources
+```
+
+### Key Components
+- **Rhythm Engine**: Beat detection and timing
+- **Combat System**: Monster hunting mechanics
+- **Audio System**: K-pop music integration
+- **UI Framework**: Responsive mobile interface
+
+## 🎵 Asset Guidelines
+
+### Ethical Asset Sourcing
+This project follows MIFF principles:
+
+#### ✅ Recommended
+- **Creative Commons** licensed assets
+- **Public domain** materials
+- **Original creations** by contributors
+- **Open source** game assets
+- **Royalty-free** music and sound effects
+
+#### ❌ Avoid
+- **Copyrighted** K-pop music without permission
+- **Proprietary** assets or engines
+- **Non-commercial** only licenses
+
+## 🔄 Remixing
+
+### Quick Remix
+1. **Fork** the repository
+2. **Clone** your fork
+3. **Modify** gameplay or assets
+4. **Push** changes (triggers auto-build)
+5. **Share** your remix!
+
+### Remix Ideas
+- New K-pop genres (J-pop, C-pop, etc.)
+- Different monster types and behaviors
+- Alternative rhythm mechanics
+- Visual style variations
+- Multiplayer features
+
+## 📚 Documentation
+
+- **[Remix Guide](REMIX_GUIDE.md)**: Comprehensive guide for contributors
+- **[Build Scripts](build-apk.sh)**: Automated build process
+- **[Mobile Development](mobile-build.sh)**: Termux and mobile setup
+- **[GitHub Actions](.github/workflows/)**: CI/CD configuration
+
+## 🛠️ Development
+
+### Prerequisites
+- **Android Studio** or **Android SDK** (API 26+)
+- **Java 17** (OpenJDK/Temurin recommended)
+- **Git** for version control
+
+### Setup
+```bash
+# Clone repository
+git clone https://github.com/your-username/kpop-monster-hunter-remix.git
+cd kpop-monster-hunter-remix
+
+# Build APK
+./build-apk.sh
+
+# Or use Gradle directly
+./gradlew :android:assembleRelease
+```
+
+### Debugging
+```bash
+# View build logs
+./gradlew :android:assembleDebug --info
+
+# Check APK contents
+aapt dump badging android/build/outputs/apk/debug/android-debug.apk
+
+# Install and run on device
+./gradlew :android:installDebug
+```
+
+## 🤝 Contributing
+
+### Guidelines
+- **MIT License** - all contributions must be MIT licensed
+- **No secrets** - everything must be public and remixable
+- **Mobile-first** - prioritize Android compatibility
+- **Documentation** - explain your changes clearly
+- **Testing** - ensure builds work on real devices
+
+### Ways to Contribute
+- 🎮 **Gameplay**: Add new mechanics or features
+- 🎨 **Assets**: Create graphics, music, or sound effects
+- 🐛 **Bug Fixes**: Report and fix issues
+- 📚 **Documentation**: Improve guides and tutorials
+- 🔧 **Build System**: Enhance CI/CD pipeline
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+All assets and code are free to use, modify, and distribute according to the MIT License terms.
+
+## 🎵 MIFF Movement
+
+**Make It For Free** - Empowering creators to build, share, and remix games without barriers.
+
+- **Website**: [Make It For Free](https://makeitforfree.org)
+- **Principles**: Open source, no barriers, community-driven
+- **Tools**: Public keystores, automatic builds, shared assets
+
+---
+
+**🎵 Let's make amazing games together, for free! 🎵**
+
+*Part of the MIFF (Make It For Free) movement - empowering creators worldwide.*

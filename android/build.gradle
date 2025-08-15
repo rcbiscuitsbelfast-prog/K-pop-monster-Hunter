@@ -1,7 +1,7 @@
 android {
     buildToolsVersion "35.0.0"
     compileSdkVersion 35
-    namespace "com.unlucky.main"
+    namespace "com.miff.kpopmonsterhunter"
 
     sourceSets {
         main {
@@ -24,17 +24,30 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.unlucky.main"
+        applicationId "com.miff.kpopmonsterhunter"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode 1
         versionName "1.0"
     }
     
+    signingConfigs {
+        remix {
+            storeFile file('../keystore/open-remix.keystore')
+            storePassword 'remixpass'
+            keyAlias 'remixkey'
+            keyPassword 'remixpass'
+        }
+    }
+    
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
+            signingConfig signingConfigs.remix
+        }
+        debug {
+            signingConfig signingConfigs.remix
         }
     }
     
