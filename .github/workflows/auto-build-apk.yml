@@ -61,7 +61,13 @@ jobs:
         ./gradlew --version
         echo ""
         echo "Android SDK location: $ANDROID_HOME"
+        echo "Android SDK contents:"
+        ls -la $ANDROID_HOME/platforms/ || echo "No platforms found"
+        ls -la $ANDROID_HOME/build-tools/ || echo "No build-tools found"
+        echo ""
         echo "Keystore exists: $(ls -la android/keystore/open-remix.keystore 2>/dev/null && echo 'YES' || echo 'NO')"
+
+
 
     - name: 🧹 Clean previous builds
       run: ./gradlew --no-daemon clean
