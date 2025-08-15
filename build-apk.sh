@@ -20,8 +20,22 @@ echo "Cleaning previous builds..."
 echo "Building release APK..."
 ./gradlew --no-daemon :android:assembleRelease
 
-APK_UNSIGNED="android/build/outputs/apk/release/android-release-unsigned.apk"
-APK_ALIGNED="android/build/outputs/apk/release/Unlucky.apk"
+APK_DIR="android/build/outputs/apk/release"
+APK_UNSIGNED="$APK_DIR/android-release-unsigned.apk"
+APK_ALIGNED="$APK_DIR/Unlucky-aligned.apk"
+APK_SIGNED="$APK_DIR/Unlucky.apk"
+
+# Locate zipalign and apksigner
+if command -v zipalign >/dev/null 2>&1; then
+  ZIPALIGN_BIN="$(command -v zipalign)"
+else
+  ZIPALIGN_BIN="${ANDROID_HOME:-$ANDROID_SDK_ROOT}/build-tools/*/zipalign"
+fi
+if command -v apksigner >/dev/null 2>&1; then
+  APKSIGNER_BIN="$(command -v apksigner)"
+else
+  APKSIGNER_BIN="${ANDROID_HOME:-$ANDROID_SDK_ROOT}/build-tools/*/apksigner"
+fi
 
 # Check if build was successful
 if [ -f "$APK_UNSIGNED" ]; then
@@ -30,18 +44,22 @@ if [ -f "$APK_UNSIGNED" ]; then
     echo "📏 APK size: $(du -h "$APK_UNSIGNED" | cut -f1)"
     
     if [ "${1:-}" = "--sign" ]; then
-        echo "🔐 Signing APK (debug key)..."
+        echo "🔐 Aligning and signing APK (debug key)..."
         if [ ! -f "keystore.jks" ]; then
             keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias android -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
         fi
-        # Align
-        "$ANDROID_HOME"/build-tools/*/zipalign -v 4 "$APK_UNSIGNED" "$APK_ALIGNED"
+        # Align with page alignment
+        eval "$ZIPALIGN_BIN" -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
+        # Verify alignment
+        eval "$ZIPALIGN_BIN" -c -v 4 "$APK_ALIGNED"
         # Sign with apksigner (preferred on modern SDKs)
-        "$ANDROID_HOME"/build-tools/*/apksigner sign --ks keystore.jks --ks-pass pass:android --key-pass pass:android --out "$APK_ALIGNED" "$APK_ALIGNED"
-        echo "✅ APK aligned and signed: $APK_ALIGNED"
+        eval "$APKSIGNER_BIN" sign --ks keystore.jks --ks-pass pass:android --key-pass pass:android --out "$APK_SIGNED" "$APK_ALIGNED"
+        # Verify signature
+        eval "$APKSIGNER_BIN" verify -v "$APK_SIGNED"
+        echo "✅ APK aligned and signed: $APK_SIGNED"
     fi
 else
-    echo "❌ APK build failed!"
+    echo "❌ APK build failed! Missing: $APK_UNSIGNED"
     exit 1
 fi
 
