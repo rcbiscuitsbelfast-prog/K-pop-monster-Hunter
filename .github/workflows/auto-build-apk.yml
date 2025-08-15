@@ -3,22 +3,8 @@ name: Auto-Build K-pop Monster Hunter APK
 on:
   push:
     branches: [ main, develop, update-game-name ]
-    paths:
-      - 'core/**'
-      - 'android/**'
-      - 'desktop/**'
-      - 'build.gradle'
-      - 'gradle.properties'
-      - 'settings.gradle'
   pull_request:
     branches: [ main, develop, update-game-name ]
-    paths:
-      - 'core/**'
-      - 'android/**'
-      - 'desktop/**'
-      - 'build.gradle'
-      - 'gradle.properties'
-      - 'settings.gradle'
   workflow_dispatch:
     inputs:
       build_type:
