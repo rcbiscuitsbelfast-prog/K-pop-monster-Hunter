@@ -1,0 +1,29 @@
+name: Test Simple Workflow
+
+on:
+  push:
+    branches: [ update-game-name ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Test Step
+      run: |
+        echo "🎉 GitHub Actions is working!"
+        echo "Branch: ${{ github.ref }}"
+        echo "Event: ${{ github.event_name }}"
+        echo "Repository: ${{ github.repository }}"
+        echo "Commit: ${{ github.sha }}"
+        
+    - name: List files
+      run: |
+        echo "📁 Current directory contents:"
+        ls -la
+        echo ""
+        echo "📁 Android directory:"
+        ls -la android/ || echo "Android directory not found"
+        echo ""
+        echo "📁 Keystore:"
+        ls -la android/keystore/ || echo "Keystore directory not found"
