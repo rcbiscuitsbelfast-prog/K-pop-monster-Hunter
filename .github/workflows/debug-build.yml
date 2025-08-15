@@ -1,0 +1,55 @@
+name: Debug Build Issues
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        
+    - name: Setup Android
+      uses: android-actions/setup-android@v2
+      with:
+        api-level: '30'
+        build-tools: '30.0.3'
+        
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+      
+    - name: Show project structure
+      run: |
+        echo "=== PROJECT STRUCTURE ==="
+        find . -name "*.gradle" -o -name "*.xml" -o -name "*.java" | head -20
+        echo ""
+        echo "=== GRADLE FILES ==="
+        ls -la *.gradle
+        ls -la android/*.gradle
+        echo ""
+        echo "=== ANDROID STRUCTURE ==="
+        ls -la android/
+        echo ""
+        echo "=== KEYSTORE ==="
+        ls -la android/keystore/ || echo "No keystore directory"
+        
+    - name: Test Gradle
+      run: |
+        echo "=== GRADLE VERSION ==="
+        ./gradlew --version
+        echo ""
+        echo "=== GRADLE TASKS ==="
+        ./gradlew tasks --all | head -20
+        
+    - name: Test Android Build
+      run: |
+        echo "=== ANDROID BUILD TEST ==="
+        ./gradlew :android:assembleDebug --stacktrace --info
+      continue-on-error: true
