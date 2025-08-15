@@ -2,99 +2,83 @@ name: Build Android APK
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+      - cursor/**
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to build (e.g., 1.0.0)'
-        required: true
-        default: '1.0.0'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
-      
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: 'gradle'
-        
+
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
-      
-    - name: Install Android SDK components
+
+    - name: Install Android SDK 30
       run: |
         yes | sdkmanager --licenses >/dev/null || true
-        sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
         sdkmanager --list | head -n 50 || true
-        java -version
-      
-    - name: Cache Gradle packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-          
+
+    - name: Compute timestamp and branch name
+      id: meta
+      shell: bash
+      run: |
+        TS=$(date +"%Y%m%d-%H%M")
+        BR=builds/v${TS}
+        echo "ts=${TS}" >> $GITHUB_OUTPUT
+        echo "branch=${BR}" >> $GITHUB_OUTPUT
+
+    - name: Create and push branch
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@users.noreply.github.com"
+        git checkout -b "${{ steps.meta.outputs.branch }}"
+        git push origin "${{ steps.meta.outputs.branch }}"
+
     - name: Make gradlew executable
       run: chmod +x gradlew
-      
-    - name: Build APK
-      run: ./gradlew --no-daemon --info --warning-mode all android:assembleRelease
-      
-    - name: Align and sign APK (apksigner)
+
+    - name: Build release APK (app module)
+      run: ./gradlew --no-daemon --info --warning-mode all app:assembleRelease
+
+    - name: Align and sign APK with secrets
       env:
-        KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
-        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'kpopmonsterhunter' }}
+        KEY_ALIAS: remixkey
         KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
       shell: bash
       run: |
         set -euo pipefail
-        APK_DIR=android/build/outputs/apk/release
-        APK_UNSIGNED=$APK_DIR/android-release-unsigned.apk
-        APK_ALIGNED=$APK_DIR/Unlucky-aligned.apk
-        APK_SIGNED=$APK_DIR/Unlucky.apk
+        APK_DIR=app/build/outputs/apk/release
+        APK_UNSIGNED=$APK_DIR/app-release-unsigned.apk
+        APK_ALIGNED=$APK_DIR/${{ steps.meta.outputs.branch }}-aligned.apk
+        APK_SIGNED=$APK_DIR/${{ steps.meta.outputs.branch }}.apk
 
-        # Resolve build-tools
-        BUILD_TOOLS_DIR=$(ls -1d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -n 1)
+        BUILD_TOOLS_DIR=$(ls -1d "$ANDROID_HOME"/build-tools/30.0.3 2>/dev/null | tail -n 1)
         ZIPALIGN_BIN="$BUILD_TOOLS_DIR/zipalign"
         APKSIGNER_BIN="$BUILD_TOOLS_DIR/apksigner"
 
         [ -f "$APK_UNSIGNED" ] || { echo "Missing input APK: $APK_UNSIGNED" >&2; ls -la "$APK_DIR" || true; exit 1; }
 
-        # Defaults
-        KEY_ALIAS="${KEY_ALIAS:-kpopmonsterhunter}"
-        KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD:-android}"
-        KEY_PASSWORD="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
-
-        # Prepare keystore and alias
-        if [ -n "${KEYSTORE_BASE64:-}" ]; then echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks; fi
-        if [ -f keystore.jks ]; then
-          if keytool -list -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" | grep -q "Alias name: $KEY_ALIAS"; then
-            echo "Keystore exists with alias $KEY_ALIAS."
-          else
-            echo "Keystore exists but alias missing; generating alias $KEY_ALIAS."
-            keytool -genkeypair -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" \
-              -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASSWORD" \
-              -dname "CN=Android,O=Android,C=US"
-          fi
-        else
-          echo "Creating keystore with alias $KEY_ALIAS."
-          keytool -genkeypair -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" \
-            -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASSWORD" \
-            -dname "CN=Android,O=Android,C=US"
-        fi
+        # Keystore from secret
+        echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
 
         # Align and verify
         "$ZIPALIGN_BIN" -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
@@ -106,37 +90,10 @@ jobs:
           --out "$APK_SIGNED" "$APK_ALIGNED"
         "$APKSIGNER_BIN" verify -v "$APK_SIGNED"
         ls -la "$APK_DIR"
-      
-    - name: Upload APK as artifact
-      uses: actions/upload-artifact@v4
+
+    - name: Upload signed APK artifact
+      uses: actions/upload-artifact@v3
       with:
-        name: Unlucky-APK
-        path: android/build/outputs/apk/release/Unlucky.apk
+        name: APK-builds-v${{ steps.meta.outputs.ts }}
+        path: app/build/outputs/apk/release/${{ steps.meta.outputs.branch }}.apk
         retention-days: 30
-      
-    - name: Get version
-      id: get_version
-      run: |
-        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-        else
-          echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-        fi
-        
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: v${{ steps.get_version.outputs.version }}
-        name: Release v${{ steps.get_version.outputs.version }}
-        body: |
-          Android APK for Unlucky game v${{ steps.get_version.outputs.version }}
-          
-          ## Installation
-          1. Download the APK file
-          2. Enable "Install from unknown sources" in your Android settings
-          3. Install the APK
-        files: android/build/outputs/apk/release/Unlucky.apk
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
