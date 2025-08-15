@@ -20,20 +20,61 @@ Note: running the game on desktop will create a `save.json` file in the same dir
 Also available for free on the [Google Play Store](https://play.google.com/store/apps/details?id=com.unlucky.main)
 
 ### Building Android APK
-This project includes a GitHub Actions workflow that automatically builds and releases Android APK files. To trigger a build:
+This project includes a comprehensive GitHub Actions workflow that automatically builds and releases Android APK files. The build system has been modernized and optimized for reliability.
 
+**To trigger a build:**
 1. **Automatic Release**: Push a tag starting with 'v' (e.g., `v1.0.0`) to trigger an automatic build and release
 2. **Manual Build**: Go to the Actions tab in GitHub and manually trigger the "Build Android APK" workflow
 
-The workflow will:
-- Build a signed APK file
+**The workflow will:**
+- Set up Java 17 and Android SDK with build tools 30.0.3
+- Build a signed APK file using modern Android build tools
 - Create a GitHub release with the APK as a downloadable asset
 - Upload the APK as a build artifact for debugging
 
-To build locally:
+**To build locally:**
 ```bash
+# Make sure you have Java 17+ and Android SDK installed
 ./gradlew android:assembleRelease
+
+# Or use the provided build script
+./build-apk.sh
 ```
+
+**Build System Requirements:**
+- Java 17 or higher
+- Android SDK with build tools 30.0.3
+- Gradle 8.3+
+
+## Build System Improvements
+
+This project has been modernized with the following technical improvements:
+
+### **Updated Build Infrastructure**
+- **Java Compatibility**: Upgraded from Java 8 to Java 17 for better performance and modern Android SDK support
+- **Gradle Version**: Updated to Gradle 8.3 with enhanced caching and build performance
+- **Android Gradle Plugin**: Upgraded to 8.1.4 for modern Android development features
+- **Build Tools**: Using reliable build tools 30.0.3 with full `aapt` and `aapt2` support
+
+### **GitHub Actions Workflow**
+- **Automated CI/CD**: Complete automated build and release pipeline
+- **Java 17 Setup**: Proper Java 17 configuration with Temurin distribution
+- **Android SDK Management**: Automated Android SDK setup with specific build tools
+- **APK Signing**: Automated APK signing with debug keystore
+- **Release Management**: Automatic GitHub releases with downloadable APKs
+
+### **Local Development**
+- **Build Script**: Added `build-apk.sh` for easy local APK building
+- **Gradle Wrapper**: Complete Gradle wrapper setup for consistent builds
+- **Dependency Management**: Updated to modern dependency configurations
+
+### **Technical Specifications**
+- **Minimum SDK**: Android API 21 (Android 5.0)
+- **Target SDK**: Android API 30 (Android 11)
+- **Compile SDK**: Android API 30
+- **Build Tools**: 30.0.3
+- **Java Version**: 17
+- **Gradle Version**: 8.3
 
 The assets for this game are also available for download:
 * [Textures](https://github.com/mingli1/Unlucky/files/2300518/textures.zip) (contains a file `textures.png` that has all the textures in the game mapped into an atlas `textures.atlas`)
@@ -42,10 +83,70 @@ The assets for this game are also available for download:
 * [Sound Effects](https://github.com/mingli1/Unlucky/files/2300530/sfx.zip) (all sfx in the game mostly in `.ogg` format)
 
 ## Credits
-* Programming - done by me using Java 8 and the [LibGDX library](https://libgdx.badlogicgames.com/)
-* Artwork - done by me using [Paint.net](https://www.getpaint.net/) and textures packed using [Gdx Texture Packer GUI](https://github.com/crashinvaders/gdx-texture-packer-gui)
-* Music - done by me using [Bosca Cecilo](https://boscaceoil.net/)
-* Sound Effects - all sound effects are under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/) from [Freesound](https://freesound.org/) and edited by me using [Audacity](https://www.audacityteam.org/)
+* **Programming** - done by me using Java 17 and the [LibGDX library](https://libgdx.badlogicgames.com/)
+* **Artwork** - done by me using [Paint.net](https://www.getpaint.net/) and textures packed using [Gdx Texture Packer GUI](https://github.com/crashinvaders/gdx-texture-packer-gui)
+* **Music** - done by me using [Bosca Cecilo](https://boscaceoil.net/)
+* **Sound Effects** - all sound effects are under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/) from [Freesound](https://freesound.org/) and edited by me using [Audacity](https://www.audacityteam.org/)
+
+## Development
+
+### **Build System Modernization**
+The build system has been completely modernized to support:
+- Modern Java development (Java 17+)
+- Current Android development standards
+- Automated CI/CD with GitHub Actions
+- Reliable APK building and distribution
+
+### **Technology Stack**
+- **Game Engine**: LibGDX 1.9.4
+- **Language**: Java 17
+- **Build System**: Gradle 8.3
+- **Android Build**: Android Gradle Plugin 8.1.4
+- **CI/CD**: GitHub Actions
+- **APK Distribution**: GitHub Releases
+
+## Troubleshooting
+
+### **Common Build Issues**
+
+**Java Version Issues:**
+```bash
+# Ensure you have Java 17+ installed
+java -version
+
+# Set JAVA_HOME if needed
+export JAVA_HOME=/path/to/java17
+```
+
+**Android SDK Issues:**
+```bash
+# Ensure Android SDK is installed and ANDROID_HOME is set
+echo $ANDROID_HOME
+
+# Install required build tools
+$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3"
+```
+
+**Gradle Issues:**
+```bash
+# Clean and rebuild
+./gradlew clean
+./gradlew android:assembleRelease
+
+# Check Gradle version
+./gradlew --version
+```
+
+**APK Signing Issues:**
+```bash
+# Use the provided build script for local signing
+./build-apk.sh --sign
+```
+
+### **GitHub Actions Issues**
+- Check the Actions tab for detailed build logs
+- Ensure the workflow has proper permissions
+- Verify that tags are properly formatted (e.g., `v1.0.0`)
 
 ## License
 This project is licensed under the [MIT License](https://github.com/mingli1/Unlucky/blob/master/LICENSE).
