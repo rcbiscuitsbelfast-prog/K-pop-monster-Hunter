@@ -32,7 +32,7 @@ jobs:
     - name: Install Android SDK components
       run: |
         yes | sdkmanager --licenses >/dev/null || true
-        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+        sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
         sdkmanager --list | head -n 50 || true
         java -version
       
@@ -50,21 +50,62 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build APK
-      run: ./gradlew android:assembleRelease
+      run: ./gradlew --no-daemon --info --warning-mode all android:assembleRelease
       
-    - name: Sign APK
+    - name: Align and sign APK (apksigner)
+      env:
+        KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
+        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'kpopmonsterhunter' }}
+        KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
+      shell: bash
       run: |
-        # Create keystore for signing (for demo purposes - in production use proper keystore)
-        keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias android -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
-        
-        # Sign the APK
-        jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks android/build/outputs/apk/release/android-release-unsigned.apk android
-        
-        # Optimize APK
-        $ANDROID_HOME/build-tools/30.0.3/zipalign -v 4 android/build/outputs/apk/release/android-release-unsigned.apk android/build/outputs/apk/release/Unlucky.apk
-        
-        # Verify APK was created
-        ls -la android/build/outputs/apk/release/
+        set -euo pipefail
+        APK_DIR=android/build/outputs/apk/release
+        APK_UNSIGNED=$APK_DIR/android-release-unsigned.apk
+        APK_ALIGNED=$APK_DIR/Unlucky-aligned.apk
+        APK_SIGNED=$APK_DIR/Unlucky.apk
+
+        # Resolve build-tools
+        BUILD_TOOLS_DIR=$(ls -1d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -n 1)
+        ZIPALIGN_BIN="$BUILD_TOOLS_DIR/zipalign"
+        APKSIGNER_BIN="$BUILD_TOOLS_DIR/apksigner"
+
+        [ -f "$APK_UNSIGNED" ] || { echo "Missing input APK: $APK_UNSIGNED" >&2; ls -la "$APK_DIR" || true; exit 1; }
+
+        # Defaults
+        KEY_ALIAS="${KEY_ALIAS:-kpopmonsterhunter}"
+        KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD:-android}"
+        KEY_PASSWORD="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
+
+        # Prepare keystore and alias
+        if [ -n "${KEYSTORE_BASE64:-}" ]; then echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks; fi
+        if [ -f keystore.jks ]; then
+          if keytool -list -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" | grep -q "Alias name: $KEY_ALIAS"; then
+            echo "Keystore exists with alias $KEY_ALIAS."
+          else
+            echo "Keystore exists but alias missing; generating alias $KEY_ALIAS."
+            keytool -genkeypair -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" \
+              -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASSWORD" \
+              -dname "CN=Android,O=Android,C=US"
+          fi
+        else
+          echo "Creating keystore with alias $KEY_ALIAS."
+          keytool -genkeypair -v -keystore keystore.jks -storepass "$KEYSTORE_PASSWORD" \
+            -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASSWORD" \
+            -dname "CN=Android,O=Android,C=US"
+        fi
+
+        # Align and verify
+        "$ZIPALIGN_BIN" -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
+        "$ZIPALIGN_BIN" -c -v 4 "$APK_ALIGNED"
+
+        # Sign and verify
+        "$APKSIGNER_BIN" sign --ks keystore.jks --ks-key-alias "$KEY_ALIAS" \
+          --ks-pass pass:"$KEYSTORE_PASSWORD" --key-pass pass:"$KEY_PASSWORD" \
+          --out "$APK_SIGNED" "$APK_ALIGNED"
+        "$APKSIGNER_BIN" verify -v "$APK_SIGNED"
+        ls -la "$APK_DIR"
       
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4
@@ -79,7 +120,6 @@ jobs:
         if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
           echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
         else
-          # Extract version from tag
           echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
         fi
         
