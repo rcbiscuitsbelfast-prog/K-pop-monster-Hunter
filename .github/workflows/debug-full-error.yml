@@ -1,0 +1,66 @@
+name: Debug Full Error Details
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Java 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+        
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+      
+    - name: Show environment
+      run: |
+        echo "=== ENVIRONMENT ==="
+        echo "Java version:"
+        java -version
+        echo ""
+        echo "Gradle version:"
+        ./gradlew --version
+        echo ""
+        echo "Android SDK:"
+        echo $ANDROID_HOME
+        
+    - name: Test Gradle Parse with Full Output
+      run: |
+        echo "=== GRADLE PARSE TEST ==="
+        ./gradlew projects --stacktrace --info --debug 2>&1 | tee gradle-parse.log
+        echo ""
+        echo "Parse exit code: $?"
+        
+    - name: Test Clean with Full Output
+      run: |
+        echo "=== GRADLE CLEAN TEST ==="
+        ./gradlew clean --stacktrace --info --debug 2>&1 | tee gradle-clean.log
+        echo ""
+        echo "Clean exit code: $?"
+        
+    - name: Show Full Logs
+      run: |
+        echo "=== GRADLE PARSE LOG ==="
+        cat gradle-parse.log
+        echo ""
+        echo "=== GRADLE CLEAN LOG ==="
+        cat gradle-clean.log
+        
+    - name: Upload Full Logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: Full-Error-Logs
+        path: |
+          gradle-parse.log
+          gradle-clean.log
+        retention-days: 7
