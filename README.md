@@ -217,3 +217,4 @@ All assets and code are free to use, modify, and distribute according to the MIT
 *Part of the MIFF (Make It For Free) movement - empowering creators worldwide.*
 # Another test trigger
 # Test trigger to check workflow errors
+# Debug: Check current workflow status
