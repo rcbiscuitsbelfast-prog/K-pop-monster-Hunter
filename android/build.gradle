@@ -1,6 +1,6 @@
 android {
     namespace "com.unlucky.main"
-    compileSdkVersion 33
+    compileSdkVersion 30
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "com.unlucky.main"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
