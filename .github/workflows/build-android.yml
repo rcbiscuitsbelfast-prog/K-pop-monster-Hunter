@@ -29,15 +29,6 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
         
-    - name: Verify Java version
-      run: |
-        echo "=== Java Version Check ==="
-        java -version
-        echo "JAVA_HOME: $JAVA_HOME"
-        echo "Java major version:"
-        java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f1
-        echo "=== End Java Version Check ==="
-        
     - name: Install Android SDK components
       run: |
         echo "=== Installing Android SDK Components ==="
@@ -58,84 +49,40 @@ jobs:
         
         echo "=== End Installing Android SDK Components ==="
         
-    - name: Verify Android SDK tools compatibility
+    - name: Verify environment
       run: |
-        echo "=== Android SDK Tools Check ==="
+        echo "=== Environment Verification ==="
+        echo "Java version:"
+        java -version
         echo "Android SDK location: $ANDROID_HOME"
         echo "Build tools available:"
         ls -la $ANDROID_HOME/build-tools/
         echo "Platforms available:"
         ls -la $ANDROID_HOME/platforms/
-        echo "Platform tools available:"
-        ls -la $ANDROID_HOME/platform-tools/
-        echo "Checking build tools version compatibility:"
+        echo "Testing aapt:"
         $ANDROID_HOME/build-tools/29.0.3/aapt version
-        echo "Checking aapt2 availability:"
-        $ANDROID_HOME/build-tools/29.0.3/aapt2 version
-        echo "=== End Android SDK Tools Check ==="
+        echo "=== End Environment Verification ==="
         
-    - name: Verify build tools installation
-      run: |
-        echo "=== Verifying Build Tools Installation ==="
-        echo "Checking for aapt:"
-        ls -la $ANDROID_HOME/build-tools/29.0.3/aapt
-        echo "Checking for aapt2:"
-        ls -la $ANDROID_HOME/build-tools/29.0.3/aapt2
-        echo "Checking for zipalign:"
-        ls -la $ANDROID_HOME/build-tools/29.0.3/zipalign
-        echo "Testing aapt version:"
-        $ANDROID_HOME/build-tools/29.0.3/aapt version
-        echo "Testing aapt2 version:"
-        $ANDROID_HOME/build-tools/29.0.3/aapt2 version
-        echo "=== End Verifying Build Tools Installation ==="
-        
-    - name: Debug Java and Android setup
-      run: |
-        echo "=== Environment Check ==="
-        echo "Java version:"
-        java -version
-        echo "JAVA_HOME: $JAVA_HOME"
-        echo "Android SDK location: $ANDROID_HOME"
-        echo "Android SDK build-tools:"
-        ls -la $ANDROID_HOME/build-tools/
-        echo "Android SDK platforms:"
-        ls -la $ANDROID_HOME/platforms/
-        echo "=== Gradle Wrapper Test ==="
-        ./gradlew --version
-        echo "=== End Environment Check ==="
-      
-
-          
     - name: Make gradlew executable
       run: chmod +x gradlew
       
-    - name: Test Gradle configuration
+    - name: Test Gradle setup
       run: |
-        echo "=== Testing Gradle Configuration ==="
-        echo "Gradle version:"
+        echo "=== Gradle Setup Test ==="
         ./gradlew --version
-        echo "Available Android tasks:"
-        ./gradlew tasks --all | grep -E "(android|assemble)" | head -5
-        echo "=== End Testing Gradle Configuration ==="
-      
-
+        ./gradlew tasks --all | grep -E "(android|assemble)" | head -3
+        echo "=== End Gradle Setup Test ==="
       
     - name: Build APK
       run: |
-        echo "=== Starting APK Build ==="
-        echo "Using Java version:"
-        java -version
-        echo "Using Android build tools:"
-        ls -la $ANDROID_HOME/build-tools/
-        echo "Verifying aapt tool:"
-        $ANDROID_HOME/build-tools/29.0.3/aapt version
-        echo "Building APK..."
+        echo "=== Building APK ==="
         ./gradlew android:assembleRelease
         echo "=== APK Build Complete ==="
       
     - name: Sign APK
       run: |
-        # Create keystore for signing (for demo purposes - in production use proper keystore)
+        echo "=== Signing APK ==="
+        # Create keystore for signing
         keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias android -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
         
         # Sign the APK
@@ -146,6 +93,7 @@ jobs:
         
         # Verify APK was created
         ls -la android/build/outputs/apk/release/
+        echo "=== APK Signing Complete ==="
       
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4

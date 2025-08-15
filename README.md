@@ -44,7 +44,7 @@ This project includes a comprehensive GitHub Actions workflow that automatically
 **Build System Requirements:**
 - Java 17 or higher
 - Android SDK with build tools 29.0.3
-- Gradle 8.3+
+- Gradle 8.5+
 
 ## Build System Improvements
 
@@ -74,7 +74,7 @@ This project has been modernized with the following technical improvements:
 - **Compile SDK**: Android API 30
 - **Build Tools**: 29.0.3
 - **Java Version**: 17
-- **Gradle Version**: 8.3
+- **Gradle Version**: 8.5
 
 The assets for this game are also available for download:
 * [Textures](https://github.com/mingli1/Unlucky/files/2300518/textures.zip) (contains a file `textures.png` that has all the textures in the game mapped into an atlas `textures.atlas`)
@@ -100,7 +100,7 @@ The build system has been completely modernized to support:
 ### **Technology Stack**
 - **Game Engine**: LibGDX 1.9.4
 - **Language**: Java 17
-- **Build System**: Gradle 8.3
+- **Build System**: Gradle 8.5
 - **Android Build**: Android Gradle Plugin 8.1.4
 - **CI/CD**: GitHub Actions
 - **APK Distribution**: GitHub Releases
