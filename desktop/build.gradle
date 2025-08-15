@@ -1,6 +1,6 @@
-apply plugin: "java"
+apply plugin: "java-library"
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 project.ext.mainClassName = "com.unlucky.main.desktop.DesktopLauncher"
@@ -14,18 +14,21 @@ task run(dependsOn: classes, type: JavaExec) {
     ignoreExitValue = true
 }
 
+// Create a runnable fat JAR with dependencies and assets
 task dist(type: Jar) {
-    from files(sourceSets.main.output.classesDir)
-    from files(sourceSets.main.output.resourcesDir)
-    from {configurations.compile.collect {zipTree(it)}}
-    from files(project.assetsDir);
+    dependsOn(project(":core").tasks.named("jar"))
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.main.output)
+    from({ configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } })
+    from(files(project.assetsDir))
  
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
 }
 
-dist.dependsOn classes
+assemble.dependsOn dist
+
 
 eclipse {
     project {
@@ -34,6 +37,7 @@ eclipse {
     }
 }
 
+// Keep afterEclipseImport task for compatibility
 task afterEclipseImport(description: "Post processing after project generation", group: "IDE") {
   doLast {
     def classpath = new XmlParser().parse(file(".classpath"))

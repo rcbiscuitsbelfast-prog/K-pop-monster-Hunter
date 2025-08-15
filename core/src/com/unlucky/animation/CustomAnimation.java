@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
  * @author Ivan Vinski
  * @since 1.0
  */
-public class CustomAnimation extends Animation {
+public class CustomAnimation extends Animation<TextureRegion> {
 
     private float stateTime;
     private boolean playing;
@@ -59,19 +59,19 @@ public class CustomAnimation extends Animation {
     }
 
     public TextureRegion getKeyFrame(boolean looping) {
-        return getKeyFrame(stateTime, looping);
+        return super.getKeyFrame(stateTime, looping);
     }
 
     public TextureRegion getKeyFrame() {
-        return getKeyFrame(stateTime);
+        return super.getKeyFrame(stateTime);
     }
 
     public int getKeyFrameIndex() {
-        return getKeyFrameIndex(stateTime);
+        return super.getKeyFrameIndex(stateTime);
     }
 
     public boolean isAnimationFinished() {
-        return isAnimationFinished(stateTime);
+        return super.isAnimationFinished(stateTime);
     }
 
     public boolean isPlaying() {
