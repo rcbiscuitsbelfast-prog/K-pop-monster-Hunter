@@ -51,9 +51,8 @@ jobs:
     - name: 🤖 Set up Android SDK
       uses: android-actions/setup-android@v2
       with:
-        api-level: '26'  # Android 8.0+
+        api-level: '35'
         build-tools: '35.0.0'
-        platform: '35'
 
     - name: 🔧 Make gradlew executable
       run: chmod +x gradlew
@@ -91,7 +90,7 @@ jobs:
           echo "📱 APK location: $APK_PATH"
           echo "📏 APK size: $(du -h "$APK_PATH" | cut -f1)"
           echo "🔍 APK info:"
-          aapt dump badging "$APK_PATH" | grep -E "(package|application-label|version)"
+          "$ANDROID_HOME"/build-tools/*/aapt dump badging "$APK_PATH" | grep -E "(package|application-label|version)" || true
         else
           echo "❌ APK build failed!"
           exit 1

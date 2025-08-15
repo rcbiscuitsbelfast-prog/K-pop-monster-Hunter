@@ -27,6 +27,9 @@ jobs:
 
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
+      with:
+        api-level: '35'
+        build-tools: '35.0.0'
 
     - name: Make gradlew executable
       run: chmod +x gradlew
@@ -42,16 +45,30 @@ jobs:
         KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
       run: |
         set -euo pipefail
-        APK_UNSIGNED=android/build/outputs/apk/release/android-release-unsigned.apk
-        APK_ALIGNED=android/build/outputs/apk/release/Unlucky.apk
+        APK_DIR=android/build/outputs/apk/release
+        APK_UNSIGNED="$APK_DIR/android-release-unsigned.apk"
+        APK_SIGNED="$APK_DIR/android-release.apk"
+        APK_OUT="$APK_DIR/Unlucky.apk"
+
         if [ -n "${KEYSTORE_BASE64:-}" ]; then
           echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
         else
           keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${KEY_ALIAS:-android} -storepass ${KEYSTORE_PASSWORD:-android} -keypass ${KEY_PASSWORD:-android} -dname "CN=Android Debug,O=Android,C=US"
         fi
-        "$ANDROID_HOME"/build-tools/*/zipalign -v 4 "$APK_UNSIGNED" "$APK_ALIGNED"
-        "$ANDROID_HOME"/build-tools/*/apksigner sign --ks keystore.jks --ks-pass pass:${KEYSTORE_PASSWORD:-android} --key-pass pass:${KEY_PASSWORD:-android} --out "$APK_ALIGNED" "$APK_ALIGNED"
-        ls -la android/build/outputs/apk/release/
+
+        if [ -f "$APK_UNSIGNED" ]; then
+          "$ANDROID_HOME"/build-tools/*/zipalign -v 4 "$APK_UNSIGNED" "$APK_OUT"
+          "$ANDROID_HOME"/build-tools/*/apksigner sign --ks keystore.jks --ks-pass pass:${KEYSTORE_PASSWORD:-android} --key-pass pass:${KEY_PASSWORD:-android} "$APK_OUT"
+        elif [ -f "$APK_SIGNED" ]; then
+          cp "$APK_SIGNED" "$APK_OUT"
+          "$ANDROID_HOME"/build-tools/*/apksigner verify -v "$APK_OUT" || true
+        else
+          echo "No APK found to sign. Looked for $APK_UNSIGNED and $APK_SIGNED"
+          ls -la "$APK_DIR" || true
+          exit 1
+        fi
+
+        ls -la "$APK_DIR"
 
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4

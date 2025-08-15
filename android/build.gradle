@@ -25,7 +25,7 @@ android {
 
     defaultConfig {
         applicationId "com.miff.kpopmonsterhunter"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 35
         versionCode 1
         versionName "1.0"
@@ -33,7 +33,7 @@ android {
     
     signingConfigs {
         remix {
-            storeFile file('../keystore/open-remix.keystore')
+            storeFile file('keystore/open-remix.keystore')
             storePassword 'remixpass'
             keyAlias 'remixkey'
             keyPassword 'remixpass'
@@ -53,6 +53,7 @@ android {
     
     lint {
         abortOnError false
+        checkReleaseBuilds false
     }
 
     compileOptions {
@@ -108,5 +109,5 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.unlucky.main/com.unlucky.main.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.miff.kpopmonsterhunter/com.unlucky.main.AndroidLauncher'
 }

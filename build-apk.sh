@@ -38,7 +38,11 @@ if [ -f "$APK_PATH" ]; then
     
     # Display APK info
     echo "🔍 APK details:"
-    aapt dump badging "$APK_PATH" | grep -E "(package|application-label|version)" || true
+    if [ -n "${ANDROID_HOME:-}" ]; then
+        "$ANDROID_HOME"/build-tools/*/aapt dump badging "$APK_PATH" | grep -E "(package|application-label|version)" || true
+    else
+        echo "(aapt not available)"
+    fi
     
     echo ""
     echo "🎉 Build complete! Ready for rhythm-based monster hunting!"
