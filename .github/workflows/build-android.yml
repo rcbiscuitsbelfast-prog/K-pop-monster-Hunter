@@ -38,7 +38,7 @@ jobs:
       env:
         KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
-        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'android' }}
+        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'kpopmonsterhunter' }}
         KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
       run: |
         set -euo pipefail
@@ -46,14 +46,33 @@ jobs:
         APK_UNSIGNED=$APK_DIR/android-release-unsigned.apk
         APK_ALIGNED=$APK_DIR/Unlucky-aligned.apk
         APK_SIGNED=$APK_DIR/Unlucky.apk
+
+        # Keystore: use provided base64 or create if missing; ensure alias exists
         if [ -n "${KEYSTORE_BASE64:-}" ]; then
           echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
-        else
-          keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${KEY_ALIAS:-android} -storepass ${KEYSTORE_PASSWORD:-android} -keypass ${KEY_PASSWORD:-android} -dname "CN=Android Debug,O=Android,C=US"
         fi
+        if [ -f keystore.jks ]; then
+          if keytool -list -v -keystore keystore.jks -storepass ${KEYSTORE_PASSWORD:-android} | grep -q "Alias name: ${KEY_ALIAS:-kpopmonsterhunter}"; then
+            echo "Keystore exists with alias ${KEY_ALIAS:-kpopmonsterhunter}."
+          else
+            echo "Keystore exists but alias missing; generating alias ${KEY_ALIAS:-kpopmonsterhunter}."
+            keytool -genkeypair -v -keystore keystore.jks -storepass ${KEYSTORE_PASSWORD:-android} \
+              -keyalg RSA -keysize 2048 -validity 10000 -alias ${KEY_ALIAS:-kpopmonsterhunter} -keypass ${KEY_PASSWORD:-${KEYSTORE_PASSWORD:-android}} \
+              -dname "CN=Android,O=Android,C=US"
+          fi
+        else
+          echo "Creating keystore with alias ${KEY_ALIAS:-kpopmonsterhunter}."
+          keytool -genkeypair -v -keystore keystore.jks -storepass ${KEYSTORE_PASSWORD:-android} \
+            -keyalg RSA -keysize 2048 -validity 10000 -alias ${KEY_ALIAS:-kpopmonsterhunter} -keypass ${KEY_PASSWORD:-${KEYSTORE_PASSWORD:-android}} \
+            -dname "CN=Android,O=Android,C=US"
+        fi
+
         "$ANDROID_HOME"/build-tools/*/zipalign -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
         "$ANDROID_HOME"/build-tools/*/zipalign -c -v 4 "$APK_ALIGNED"
-        "$ANDROID_HOME"/build-tools/*/apksigner sign --ks keystore.jks --ks-pass pass:${KEYSTORE_PASSWORD:-android} --key-pass pass:${KEY_PASSWORD:-android} --out "$APK_SIGNED" "$APK_ALIGNED"
+        "$ANDROID_HOME"/build-tools/*/apksigner sign \
+          --ks keystore.jks --ks-key-alias ${KEY_ALIAS:-kpopmonsterhunter} \
+          --ks-pass pass:${KEYSTORE_PASSWORD:-android} --key-pass pass:${KEY_PASSWORD:-${KEYSTORE_PASSWORD:-android}} \
+          --out "$APK_SIGNED" "$APK_ALIGNED"
         "$ANDROID_HOME"/build-tools/*/apksigner verify -v "$APK_SIGNED"
         ls -la "$APK_DIR"
 

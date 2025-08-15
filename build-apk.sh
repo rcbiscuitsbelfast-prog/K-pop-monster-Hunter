@@ -44,16 +44,37 @@ if [ -f "$APK_UNSIGNED" ]; then
     echo "📏 APK size: $(du -h "$APK_UNSIGNED" | cut -f1)"
     
     if [ "${1:-}" = "--sign" ]; then
-        echo "🔐 Aligning and signing APK (debug key)..."
-        if [ ! -f "keystore.jks" ]; then
-            keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias android -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+        echo "🔐 Aligning and signing APK..."
+        KEY_ALIAS="${KEY_ALIAS:-kpopmonsterhunter}"
+        KEYSTORE_PATH="${KEYSTORE_PATH:-keystore.jks}"
+        KEYSTORE_PASS="${KEYSTORE_PASSWORD:-android}"
+        KEY_PASS="${KEY_PASSWORD:-$KEYSTORE_PASS}"
+
+        # Ensure keystore and alias exist (skip generation if alias already present)
+        if [ -f "$KEYSTORE_PATH" ]; then
+            if keytool -list -v -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASS" | grep -q "Alias name: $KEY_ALIAS"; then
+                echo "Keystore exists and alias '$KEY_ALIAS' found. Skipping key generation."
+            else
+                echo "Keystore exists but alias '$KEY_ALIAS' missing. Generating new key alias."
+                keytool -genkeypair -v -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASS" \
+                    -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASS" \
+                    -dname "CN=Android,O=Android,C=US"
+            fi
+        else
+            echo "Creating new keystore with alias '$KEY_ALIAS'..."
+            keytool -genkeypair -v -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASS" \
+                -keyalg RSA -keysize 2048 -validity 10000 -alias "$KEY_ALIAS" -keypass "$KEY_PASS" \
+                -dname "CN=Android,O=Android,C=US"
         fi
+
         # Align with page alignment
         eval "$ZIPALIGN_BIN" -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
         # Verify alignment
         eval "$ZIPALIGN_BIN" -c -v 4 "$APK_ALIGNED"
-        # Sign with apksigner (preferred on modern SDKs)
-        eval "$APKSIGNER_BIN" sign --ks keystore.jks --ks-pass pass:android --key-pass pass:android --out "$APK_SIGNED" "$APK_ALIGNED"
+        # Sign with apksigner (explicit alias)
+        eval "$APKSIGNER_BIN" sign --ks "$KEYSTORE_PATH" --ks-key-alias "$KEY_ALIAS" \
+            --ks-pass pass:"$KEYSTORE_PASS" --key-pass pass:"$KEY_PASS" \
+            --out "$APK_SIGNED" "$APK_ALIGNED"
         # Verify signature
         eval "$APKSIGNER_BIN" verify -v "$APK_SIGNED"
         echo "✅ APK aligned and signed: $APK_SIGNED"
