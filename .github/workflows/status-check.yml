@@ -1,0 +1,77 @@
+name: Status Check - Verify Project Health
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Java 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+      
+    - name: Check Project Structure
+      run: |
+        echo "=== PROJECT STRUCTURE CHECK ==="
+        echo "Gradle files found:"
+        find . -name "*.gradle" -type f
+        echo ""
+        echo "Java source files found:"
+        find . -name "*.java" -type f | wc -l
+        echo ""
+        echo "Android manifest exists:"
+        ls -la android/AndroidManifest.xml
+        echo ""
+        echo "Keystore exists:"
+        ls -la android/keystore/open-remix.keystore
+        
+    - name: Test Gradle Parse
+      run: |
+        echo "=== GRADLE PARSE TEST ==="
+        ./gradlew --version
+        echo ""
+        echo "Projects:"
+        ./gradlew projects
+        echo ""
+        echo "Tasks:"
+        ./gradlew tasks --all | head -10
+        
+    - name: Test Dependencies
+      run: |
+        echo "=== DEPENDENCIES TEST ==="
+        ./gradlew dependencies --configuration compileClasspath | head -20
+      continue-on-error: true
+        
+    - name: Test Android Build
+      run: |
+        echo "=== ANDROID BUILD TEST ==="
+        ./gradlew :android:assembleDebug --stacktrace --info
+      continue-on-error: true
+        
+    - name: Check Results
+      run: |
+        echo "=== BUILD RESULTS ==="
+        echo "Looking for APK files:"
+        find . -name "*.apk" -type f
+        echo ""
+        echo "Android build outputs:"
+        ls -la android/build/outputs/apk/debug/ 2>/dev/null || echo "No debug APK found"
+        ls -la android/build/outputs/apk/release/ 2>/dev/null || echo "No release APK found"
+        
+    - name: Upload Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: Build-Results
+        path: |
+          android/build/outputs/
+          .gradle/
+        retention-days: 7
