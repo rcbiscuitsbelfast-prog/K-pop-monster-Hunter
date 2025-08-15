@@ -1,0 +1,102 @@
+name: Error Capture - Get Specific Failure Details
+
+on:
+  workflow_dispatch:
+
+jobs:
+  capture-errors:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Java 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        
+    - name: Setup Android
+      uses: android-actions/setup-android@v2
+      with:
+        api-level: '30'
+        build-tools: '30.0.3'
+        
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+      
+    - name: Capture Gradle Version
+      run: |
+        echo "=== GRADLE VERSION ==="
+        ./gradlew --version
+        echo ""
+        echo "=== JAVA VERSION ==="
+        java -version
+        
+    - name: Capture Project Structure
+      run: |
+        echo "=== PROJECT STRUCTURE ==="
+        echo "Gradle files:"
+        find . -name "*.gradle" -type f
+        echo ""
+        echo "Java files count:"
+        find . -name "*.java" -type f | wc -l
+        echo ""
+        echo "Android manifest:"
+        ls -la android/AndroidManifest.xml
+        echo ""
+        echo "Keystore:"
+        ls -la android/keystore/open-remix.keystore
+        
+    - name: Capture Gradle Parse Errors
+      run: |
+        echo "=== GRADLE PARSE TEST ==="
+        ./gradlew projects 2>&1 | tee gradle-parse.log
+        echo ""
+        echo "Parse exit code: $?"
+        
+    - name: Capture Task List Errors
+      run: |
+        echo "=== TASK LIST TEST ==="
+        ./gradlew tasks --all 2>&1 | tee task-list.log
+        echo ""
+        echo "Task list exit code: $?"
+        
+    - name: Capture Dependencies Errors
+      run: |
+        echo "=== DEPENDENCIES TEST ==="
+        ./gradlew dependencies --configuration compileClasspath 2>&1 | tee dependencies.log
+        echo ""
+        echo "Dependencies exit code: $?"
+        
+    - name: Capture Android Build Errors
+      run: |
+        echo "=== ANDROID BUILD TEST ==="
+        ./gradlew :android:assembleDebug --stacktrace --info --debug 2>&1 | tee android-build.log
+        echo ""
+        echo "Android build exit code: $?"
+        
+    - name: Show All Logs
+      run: |
+        echo "=== GRADLE PARSE LOG ==="
+        cat gradle-parse.log
+        echo ""
+        echo "=== TASK LIST LOG ==="
+        cat task-list.log
+        echo ""
+        echo "=== DEPENDENCIES LOG ==="
+        cat dependencies.log
+        echo ""
+        echo "=== ANDROID BUILD LOG ==="
+        cat android-build.log
+        
+    - name: Upload All Logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: Error-Logs
+        path: |
+          gradle-parse.log
+          task-list.log
+          dependencies.log
+          android-build.log
+        retention-days: 7
