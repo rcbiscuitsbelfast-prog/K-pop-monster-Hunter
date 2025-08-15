@@ -38,8 +38,8 @@ jobs:
       uses: android-actions/setup-android@v2
       with:
         api-level: '26'
-        build-tools: '35.0.0'
-        platform: '35'
+        build-tools: '34.0.0'
+        platform: '34'
 
     - name: 🔧 Make gradlew executable
       run: chmod +x gradlew
@@ -50,7 +50,7 @@ jobs:
         echo "📦 Version: $(grep 'version =' build.gradle | cut -d"'" -f2)"
         echo "🏗️  Build type: ${{ github.event.inputs.build_type || 'release' }}"
         echo "🔑 Using public keystore: android/keystore/open-remix.keystore"
-        echo "📱 Target SDK: 35 (Android 14)"
+        echo "📱 Target SDK: 34 (Android 14)"
         echo "📱 Min SDK: 26 (Android 8.0+)"
         echo ""
         echo "🔍 Environment check:"
@@ -67,21 +67,19 @@ jobs:
         echo ""
         echo "Keystore exists: $(ls -la android/keystore/open-remix.keystore 2>/dev/null && echo 'YES' || echo 'NO')"
 
-
-
     - name: 🧹 Clean previous builds
       run: ./gradlew --no-daemon clean
 
     - name: 🔨 Build Debug APK
       run: |
         echo "🏗️  Building debug APK..."
-        ./gradlew --no-daemon :android:assembleDebug --stacktrace --info
+        ./gradlew --no-daemon :android:assembleDebug --stacktrace --info --warning-mode all
       continue-on-error: true
 
     - name: 🔨 Build Release APK
       run: |
         echo "🏗️  Building release APK..."
-        ./gradlew --no-daemon :android:assembleRelease --stacktrace --info
+        ./gradlew --no-daemon :android:assembleRelease --stacktrace --info --warning-mode all
       continue-on-error: true
 
     - name: ✅ Check APK files
