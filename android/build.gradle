@@ -1,7 +1,6 @@
 android {
-    buildToolsVersion "34.0.0"
-    compileSdkVersion 34
-    namespace "com.unlucky.main"
+    buildToolsVersion "30.0.3"
+    compileSdkVersion 30
 
     sourceSets {
         main {
@@ -26,7 +25,7 @@ android {
     defaultConfig {
         applicationId "com.unlucky.main"
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0.0"
     }
