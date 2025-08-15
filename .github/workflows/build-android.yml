@@ -33,10 +33,14 @@ jobs:
       run: |
         echo "Java version:"
         java -version
+        echo "JAVA_HOME:"
+        echo $JAVA_HOME
         echo "Android SDK location:"
         echo $ANDROID_HOME
         echo "Android SDK tools:"
         ls -la $ANDROID_HOME/build-tools/
+        echo "Gradle wrapper test:"
+        ./gradlew --version
       
 
           
