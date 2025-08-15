@@ -28,10 +28,6 @@ jobs:
         
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
-      with:
-        api-level: 30
-        build-tools: 29.0.3
-        platform: android-30
         
     - name: Verify Java version
       run: |
@@ -42,6 +38,26 @@ jobs:
         java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f1
         echo "=== End Java Version Check ==="
         
+    - name: Install Android SDK components
+      run: |
+        echo "=== Installing Android SDK Components ==="
+        echo "Android SDK location: $ANDROID_HOME"
+        
+        # Accept licenses
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+        
+        # Install required components
+        echo "Installing platform android-30..."
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-30"
+        
+        echo "Installing build tools 29.0.3..."
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;29.0.3"
+        
+        echo "Installing platform tools..."
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools"
+        
+        echo "=== End Installing Android SDK Components ==="
+        
     - name: Verify Android SDK tools compatibility
       run: |
         echo "=== Android SDK Tools Check ==="
@@ -50,22 +66,13 @@ jobs:
         ls -la $ANDROID_HOME/build-tools/
         echo "Platforms available:"
         ls -la $ANDROID_HOME/platforms/
+        echo "Platform tools available:"
+        ls -la $ANDROID_HOME/platform-tools/
         echo "Checking build tools version compatibility:"
         $ANDROID_HOME/build-tools/29.0.3/aapt version
         echo "Checking aapt2 availability:"
         $ANDROID_HOME/build-tools/29.0.3/aapt2 version
         echo "=== End Android SDK Tools Check ==="
-        
-    - name: Install build tools if missing
-      run: |
-        echo "=== Installing Build Tools ==="
-        if [ ! -f "$ANDROID_HOME/build-tools/29.0.3/aapt" ]; then
-          echo "Build tools 29.0.3 not found, installing..."
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;29.0.3"
-        else
-          echo "Build tools 29.0.3 already installed"
-        fi
-        echo "=== End Installing Build Tools ==="
         
     - name: Verify build tools installation
       run: |
@@ -102,14 +109,16 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
       
-    - name: Verify Gradle setup
+    - name: Test Gradle configuration
       run: |
-        echo "=== Gradle Setup Verification ==="
+        echo "=== Testing Gradle Configuration ==="
         echo "Gradle version:"
         ./gradlew --version
         echo "Available Android tasks:"
         ./gradlew tasks --all | grep -E "(android|assemble)" | head -5
-        echo "=== End Gradle Setup Verification ==="
+        echo "=== End Testing Gradle Configuration ==="
+      
+
       
     - name: Build APK
       run: |
