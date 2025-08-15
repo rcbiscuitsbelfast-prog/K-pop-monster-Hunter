@@ -47,6 +47,17 @@ jobs:
         APK_ALIGNED=$APK_DIR/Unlucky-aligned.apk
         APK_SIGNED=$APK_DIR/Unlucky.apk
 
+        # Resolve build-tools path (pick the latest)
+        BUILD_TOOLS_DIR=$(ls -1d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -n 1)
+        ZIPALIGN_BIN="$BUILD_TOOLS_DIR/zipalign"
+        APKSIGNER_BIN="$BUILD_TOOLS_DIR/apksigner"
+
+        if [ ! -f "$APK_UNSIGNED" ]; then
+          echo "Missing input APK: $APK_UNSIGNED" >&2
+          ls -la "$APK_DIR" || true
+          exit 1
+        fi
+
         # Keystore: use provided base64 or create if missing; ensure alias exists
         if [ -n "${KEYSTORE_BASE64:-}" ]; then
           echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
@@ -67,13 +78,13 @@ jobs:
             -dname "CN=Android,O=Android,C=US"
         fi
 
-        "$ANDROID_HOME"/build-tools/*/zipalign -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
-        "$ANDROID_HOME"/build-tools/*/zipalign -c -v 4 "$APK_ALIGNED"
-        "$ANDROID_HOME"/build-tools/*/apksigner sign \
+        "$ZIPALIGN_BIN" -v -p 4 "$APK_UNSIGNED" "$APK_ALIGNED"
+        "$ZIPALIGN_BIN" -c -v 4 "$APK_ALIGNED"
+        "$APKSIGNER_BIN" sign \
           --ks keystore.jks --ks-key-alias ${KEY_ALIAS:-kpopmonsterhunter} \
           --ks-pass pass:${KEYSTORE_PASSWORD:-android} --key-pass pass:${KEY_PASSWORD:-${KEYSTORE_PASSWORD:-android}} \
           --out "$APK_SIGNED" "$APK_ALIGNED"
-        "$ANDROID_HOME"/build-tools/*/apksigner verify -v "$APK_SIGNED"
+        "$APKSIGNER_BIN" verify -v "$APK_SIGNED"
         ls -la "$APK_DIR"
 
     - name: Upload APK as artifact
