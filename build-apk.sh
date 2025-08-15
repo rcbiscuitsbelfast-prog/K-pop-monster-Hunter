@@ -4,7 +4,7 @@
 # Public keystore, no secrets, no barriers to remixing!
 set -euo pipefail
 
-echo "🎮 Building K-pop Monster Hunter Remix Android APK..."
+echo "🎮 Building K-pop Monster Hunter Android APK..."
 echo "🎵 Part of the MIFF (Make It For Free) movement!"
 
 # Ensure gradlew is executable

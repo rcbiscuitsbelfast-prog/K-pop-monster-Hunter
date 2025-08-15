@@ -1,4 +1,4 @@
-name: Auto-Build K-pop Monster Hunter Remix APK
+name: Auto-Build K-pop Monster Hunter APK
 
 on:
   push:
@@ -60,7 +60,7 @@ jobs:
 
     - name: 📊 Display build info
       run: |
-        echo "🎮 Building: K-pop Monster Hunter Remix"
+        echo "🎮 Building: K-pop Monster Hunter"
         echo "📦 Version: $(grep 'version =' build.gradle | cut -d"'" -f2)"
         echo "🏗️  Build type: ${{ github.event.inputs.build_type || 'release' }}"
         echo "🔑 Using public keystore: android/keystore/open-remix.keystore"
@@ -100,7 +100,7 @@ jobs:
     - name: 📤 Upload APK as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: K-pop-Monster-Hunter-Remix-APK
+        name: K-pop-Monster-Hunter-APK
         path: |
           android/build/outputs/apk/debug/android-debug.apk
           android/build/outputs/apk/release/android-release.apk
@@ -126,7 +126,7 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         cat << EOF > build-summary.md
-        # 🎮 K-pop Monster Hunter Remix - Build Summary
+        # 🎮 K-pop Monster Hunter - Build Summary
         
         ## 📱 APK Build Complete!
         
@@ -177,7 +177,7 @@ jobs:
     - name: 📥 Download APK artifacts
       uses: actions/download-artifact@v4
       with:
-        name: K-pop-Monster-Hunter-Remix-APK
+        name: K-pop-Monster-Hunter-APK
         path: ./apks
 
     - name: 📥 Download build summary
@@ -190,7 +190,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ needs.build-apk.outputs.version || '1.0.0' }}
-        name: 🎮 K-pop Monster Hunter Remix v${{ needs.build-apk.outputs.version || '1.0.0' }}
+        name: 🎮 K-pop Monster Hunter v${{ needs.build-apk.outputs.version || '1.0.0' }}
         body_path: build-summary.md
         files: |
           apks/android-release.apk

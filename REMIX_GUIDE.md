@@ -1,4 +1,4 @@
-# 🎮 K-pop Monster Hunter Remix - Remix Guide
+# 🎮 K-pop Monster Hunter - Remix Guide
 
 ## 🎵 Welcome to the MIFF Movement!
 
@@ -14,8 +14,8 @@
 ### One-Command Build
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/kpop-monster-hunter.git
+cd kpop-monster-hunter
 
 # Build APK (automatically signed with public keystore)
 ./build-apk.sh
@@ -105,8 +105,8 @@ pkg update && pkg upgrade
 pkg install openjdk-17 gradle git
 
 # Clone and build
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/kpop-monster-hunter.git
+cd kpop-monster-hunter
 ./gradlew :android:assembleRelease
 ```
 

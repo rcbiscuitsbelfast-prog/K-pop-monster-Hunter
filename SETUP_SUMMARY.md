@@ -1,8 +1,8 @@
-# 🎮 K-pop Monster Hunter Remix - Setup Summary
+# 🎮 K-pop Monster Hunter - Setup Summary
 
 ## 🎯 What We Built
 
-A complete CI/CD pipeline for the **K-pop Monster Hunter Remix** project that demonstrates the **MIFF (Make It For Free)** movement principles:
+A complete CI/CD pipeline for the **K-pop Monster Hunter** project that demonstrates the **MIFF (Make It For Free)** movement principles:
 
 - ✅ **Public Keystore**: No secrets, no private keys
 - ✅ **Auto-Build**: APKs built on every code change
@@ -13,7 +13,7 @@ A complete CI/CD pipeline for the **K-pop Monster Hunter Remix** project that de
 ## 📁 Project Structure
 
 ```
-kpop-monster-hunter-remix/
+kpop-monster-hunter/
 ├── android/
 │   ├── keystore/
 │   │   └── open-remix.keystore    # 🔑 Public keystore
@@ -103,8 +103,8 @@ buildTypes {
 pkg install openjdk-17 gradle git
 
 # Clone and build
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/kpop-monster-hunter.git
+cd kpop-monster-hunter
 ./mobile-build.sh
 ```
 

@@ -1,4 +1,4 @@
-# 📋 Copy-Paste Snippets for Remixers
+# 📋 Copy-Paste Snippets for Remixers - K-pop Monster Hunter
 
 ## 🎯 Quick Setup Guide
 

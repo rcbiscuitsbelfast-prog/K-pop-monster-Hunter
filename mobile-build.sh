@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-echo "📱 Mobile Build Script for K-pop Monster Hunter Remix"
+echo "📱 Mobile Build Script for K-pop Monster Hunter"
 echo "🎵 MIFF Movement - Building games on mobile!"
 
 # Check if we're in a mobile environment

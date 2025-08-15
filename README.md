@@ -1,14 +1,14 @@
-# 🎮 K-pop Monster Hunter Remix
+# 🎮 K-pop Monster Hunter
 
 > **A 2D action-platformer with rhythm-based combat, built for the MIFF (Make It For Free) movement**
 
-[![Build Status](https://github.com/your-username/kpop-monster-hunter-remix/workflows/Auto-Build%20K-pop%20Monster%20Hunter%20Remix%20APK/badge.svg)](https://github.com/your-username/kpop-monster-hunter-remix/actions)
+[![Build Status](https://github.com/your-username/kpop-monster-hunter/workflows/Auto-Build%20K-pop%20Monster%20Hunter%20APK/badge.svg)](https://github.com/your-username/kpop-monster-hunter/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MIFF Movement](https://img.shields.io/badge/MIFF-Make%20It%20For%20Free-blue.svg)](https://makeitforfree.org)
 
 ## 🎵 About
 
-**K-pop Monster Hunter Remix** is an open-source 2D action-platformer that combines rhythm-based combat with monster hunting mechanics. Built on the LibGDX framework, it demonstrates how to create fully remixable games with automatic CI/CD, public keystores, and zero barriers to contribution.
+**K-pop Monster Hunter** is an open-source 2D action-platformer that combines rhythm-based combat with monster hunting mechanics. Built on the LibGDX framework, it demonstrates how to create fully remixable games with automatic CI/CD, public keystores, and zero barriers to contribution.
 
 ### 🌟 Features
 
@@ -24,8 +24,8 @@
 ### One-Command Build
 ```bash
 # Clone and build
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/kpop-monster-hunter.git
+cd kpop-monster-hunter
 ./build-apk.sh
 ```
 
@@ -33,15 +33,15 @@ cd kpop-monster-hunter-remix
 ```bash
 # Install on Android device
 pkg install openjdk-17 gradle git
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/kpop-monster-hunter.git
+cd kpop-monster-hunter
 ./mobile-build.sh
 ```
 
 ## 📱 Download
 
-- **Latest APK**: [GitHub Actions Artifacts](https://github.com/your-username/kpop-monster-hunter-remix/actions)
-- **Releases**: [GitHub Releases](https://github.com/your-username/kpop-monster-hunter-remix/releases)
+- **Latest APK**: [GitHub Actions Artifacts](https://github.com/your-username/kpop-monster-hunter/actions)
+- **Releases**: [GitHub Releases](https://github.com/your-username/kpop-monster-hunter/releases)
 - **Direct Build**: Run `./build-apk.sh` locally
 
 ## 🎯 MIFF Movement
@@ -158,8 +158,8 @@ This project follows MIFF principles:
 ### Setup
 ```bash
 # Clone repository
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/kpop-monster-hunter.git
+cd kpop-monster-hunter
 
 # Build APK
 ./build-apk.sh
