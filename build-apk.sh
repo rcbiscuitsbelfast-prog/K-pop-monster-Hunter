@@ -14,6 +14,8 @@ echo "Cleaning previous builds..."
 
 # Build release APK
 echo "Building release APK..."
+echo "Note: This requires Android SDK to be installed and ANDROID_HOME to be set"
+echo "For CI/CD builds, use the GitHub Actions workflow instead"
 ./gradlew android:assembleRelease
 
 # Check if build was successful

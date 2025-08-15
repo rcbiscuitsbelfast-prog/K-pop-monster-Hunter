@@ -24,6 +24,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: 'gradle'
         
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
@@ -37,15 +38,7 @@ jobs:
         echo "Android SDK tools:"
         ls -la $ANDROID_HOME/build-tools/
       
-    - name: Cache Gradle packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+
           
     - name: Make gradlew executable
       run: chmod +x gradlew
@@ -69,7 +62,7 @@ jobs:
         jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks android/build/outputs/apk/release/android-release-unsigned.apk android
         
         # Optimize APK
-        $ANDROID_HOME/build-tools/33.0.0/zipalign -v 4 android/build/outputs/apk/release/android-release-unsigned.apk android/build/outputs/apk/release/Unlucky.apk
+        $ANDROID_HOME/build-tools/33.0.1/zipalign -v 4 android/build/outputs/apk/release/android-release-unsigned.apk android/build/outputs/apk/release/Unlucky.apk
         
         # Verify APK was created
         ls -la android/build/outputs/apk/release/
