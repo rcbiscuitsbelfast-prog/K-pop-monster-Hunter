@@ -92,7 +92,7 @@ jobs:
         ls -la "$APK_DIR"
 
     - name: Upload signed APK artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: APK-builds-v${{ steps.meta.outputs.ts }}
         path: app/build/outputs/apk/release/${{ steps.meta.outputs.branch }}.apk
