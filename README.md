@@ -19,6 +19,22 @@ Note: running the game on desktop will create a `save.json` file in the same dir
 
 Also available for free on the [Google Play Store](https://play.google.com/store/apps/details?id=com.unlucky.main)
 
+### Building Android APK
+This project includes a GitHub Actions workflow that automatically builds and releases Android APK files. To trigger a build:
+
+1. **Automatic Release**: Push a tag starting with 'v' (e.g., `v1.0.0`) to trigger an automatic build and release
+2. **Manual Build**: Go to the Actions tab in GitHub and manually trigger the "Build Android APK" workflow
+
+The workflow will:
+- Build a signed APK file
+- Create a GitHub release with the APK as a downloadable asset
+- Upload the APK as a build artifact for debugging
+
+To build locally:
+```bash
+./gradlew android:assembleRelease
+```
+
 The assets for this game are also available for download:
 * [Textures](https://github.com/mingli1/Unlucky/files/2300518/textures.zip) (contains a file `textures.png` that has all the textures in the game mapped into an atlas `textures.atlas`)
 * [Skins](https://github.com/mingli1/Unlucky/files/2300523/skins.zip) (contains LibGDX Skins of the game)

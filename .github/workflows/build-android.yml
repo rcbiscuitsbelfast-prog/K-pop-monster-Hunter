@@ -1,0 +1,94 @@
+name: Build Android APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+        
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v2
+      
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+      
+    - name: Build APK
+      run: ./gradlew android:assembleRelease
+      
+    - name: Sign APK
+      run: |
+        # Create keystore for signing (for demo purposes - in production use proper keystore)
+        keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias android -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+        
+        # Sign the APK
+        jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks android/build/outputs/apk/release/android-release-unsigned.apk android
+        
+        # Optimize APK
+        $ANDROID_HOME/build-tools/30.0.3/zipalign -v 4 android/build/outputs/apk/release/android-release-unsigned.apk android/build/outputs/apk/release/Unlucky.apk
+        
+        # Verify APK was created
+        ls -la android/build/outputs/apk/release/
+      
+    - name: Upload APK as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Unlucky-APK
+        path: android/build/outputs/apk/release/Unlucky.apk
+        retention-days: 30
+      
+    - name: Get version
+      id: get_version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          # Extract version from tag
+          echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        name: Release v${{ steps.get_version.outputs.version }}
+        body: |
+          Android APK for Unlucky game v${{ steps.get_version.outputs.version }}
+          
+          ## Installation
+          1. Download the APK file
+          2. Enable "Install from unknown sources" in your Android settings
+          3. Install the APK
+        files: android/build/outputs/apk/release/Unlucky.apk
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
