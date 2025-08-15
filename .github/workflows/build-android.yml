@@ -54,8 +54,8 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
 
-    - name: Build release APK (app module)
-      run: ./gradlew --no-daemon --info --warning-mode all app:assembleRelease
+    - name: Build release APK (android module)
+      run: ./gradlew --no-daemon --info --warning-mode all android:assembleRelease
 
     - name: Align and sign APK with secrets
       env:
@@ -66,8 +66,8 @@ jobs:
       shell: bash
       run: |
         set -euo pipefail
-        APK_DIR=app/build/outputs/apk/release
-        APK_UNSIGNED=$APK_DIR/app-release-unsigned.apk
+        APK_DIR=android/build/outputs/apk/release
+        APK_UNSIGNED=$APK_DIR/android-release-unsigned.apk
         APK_ALIGNED=$APK_DIR/${{ steps.meta.outputs.branch }}-aligned.apk
         APK_SIGNED=$APK_DIR/${{ steps.meta.outputs.branch }}.apk
 
@@ -95,5 +95,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: APK-builds-v${{ steps.meta.outputs.ts }}
-        path: app/build/outputs/apk/release/${{ steps.meta.outputs.branch }}.apk
+        path: android/build/outputs/apk/release/${{ steps.meta.outputs.branch }}.apk
         retention-days: 30
