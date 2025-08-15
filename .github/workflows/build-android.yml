@@ -67,8 +67,11 @@ jobs:
       run: |
         set -euo pipefail
         APK_DIR=android/build/outputs/apk/release
-        APK_UNSIGNED=$APK_DIR/android-release-unsigned.apk
-        APK_ALIGNED=$APK_DIR/${{ steps.meta.outputs.branch }}-aligned.apk
+        # Preferred input per request
+        APK_UNSIGNED=$APK_DIR/app-release-unsigned.apk
+        # Fallback for projects that output android-release-unsigned.apk
+        if [ ! -f "$APK_UNSIGNED" ]; then APK_UNSIGNED=$APK_DIR/android-release-unsigned.apk; fi
+        APK_ALIGNED=$APK_DIR/app-release-aligned.apk
         APK_SIGNED=$APK_DIR/${{ steps.meta.outputs.branch }}.apk
 
         BUILD_TOOLS_DIR=$(ls -1d "$ANDROID_HOME"/build-tools/30.0.3 2>/dev/null | tail -n 1)
