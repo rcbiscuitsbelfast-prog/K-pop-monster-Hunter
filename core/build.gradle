@@ -1,19 +1,9 @@
-apply plugin: "java-library"
+apply plugin: "java"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
+sourceCompatibility = 1.6
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
-
-sourceSets {
-    main {
-        java {
-            srcDirs = [ "src/" ]
-        }
-    }
-}
+sourceSets.main.java.srcDirs = [ "src/" ]
 
 
 eclipse.project {

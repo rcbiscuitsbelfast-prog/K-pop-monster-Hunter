@@ -68,9 +68,6 @@ public class Unlucky extends Game {
     // debugging
     public Label fps;
 
-    // GL profiler instance for runtime metrics
-    private GLProfiler glProfiler;
-
 	public void create() {
         batch = new SpriteBatch();
         rm = new ResourceManager();
@@ -84,7 +81,6 @@ public class Unlucky extends Game {
         fps.setFontScale(0.5f);
         fps.setVisible(player.settings.showFps);
 
-        // Create screens
         inventoryUI = new InventoryUI(this, player, rm);
         menuScreen = new MenuScreen(this, rm);
         gameScreen = new GameScreen(this, rm);
@@ -115,8 +111,7 @@ public class Unlucky extends Game {
         menuBackground[2].setVector(60, 0);
 
         // profiler
-        glProfiler = new GLProfiler(Gdx.graphics);
-        glProfiler.enable();
+        GLProfiler.enable();
 
         this.setScreen(menuScreen);
 	}
@@ -142,25 +137,20 @@ public class Unlucky extends Game {
         victoryScreen.dispose();
         settingsScreen.dispose();
 
-        glProfiler.disable();
+        GLProfiler.disable();
 	}
 
     /**
      * Logs profile for SpriteBatch calls
      */
 	public void profile(String source) {
-        int drawCalls = glProfiler.getDrawCalls();
-        int calls = glProfiler.getCalls();
-        int textureBindings = glProfiler.getTextureBindings();
-        int shaderSwitches = glProfiler.getShaderSwitches();
-        float vertexCount = glProfiler.getVertexCount().value;
         System.out.println("Profiling " + source + "..." + "\n" +
-            "  Drawcalls: " + drawCalls +
-            ", Calls: " + calls +
-            ", TextureBindings: " + textureBindings +
-            ", ShaderSwitches:  " + shaderSwitches +
-            " vertexCount: " + vertexCount);
-        glProfiler.reset();
+            "  Drawcalls: " + GLProfiler.drawCalls +
+            ", Calls: " + GLProfiler.calls +
+            ", TextureBindings: " + GLProfiler.textureBindings +
+            ", ShaderSwitches:  " + GLProfiler.shaderSwitches +
+            " vertexCount: " + GLProfiler.vertexCount.value);
+        GLProfiler.reset();
     }
 
 }
