@@ -17,7 +17,7 @@ import com.unlucky.screen.game.VictoryScreen;
 import com.unlucky.ui.inventory.InventoryUI;
 
 /**
- * "Unlucky" is a RPG/Dungeon Crawler based on RNG
+ * "K Pop monster hunters" is a RPG/Dungeon Crawler based on RNG
  * The player will go through various levels with numerous enemies
  * and attempt to complete each level by reaching the end tile.
  *
@@ -26,7 +26,7 @@ import com.unlucky.ui.inventory.InventoryUI;
 public class Unlucky extends Game {
 
     public static final String VERSION = "1.0";
-    public static final String TITLE = "Unlucky Version " + VERSION;
+    public static final String TITLE = "K Pop monster hunters Version " + VERSION;
 
     // Links
     public static final String GITHUB = "https://github.com/mingli1/Unlucky";

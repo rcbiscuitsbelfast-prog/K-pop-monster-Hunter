@@ -31,8 +31,8 @@ assemble.dependsOn dist
 
 
 eclipse {
-    project {
-        name = appName + "-desktop"
+	project {
+		name = appName + " (Desktop)"
         linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/android/assets'
     }
 }

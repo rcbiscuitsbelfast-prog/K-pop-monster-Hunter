@@ -48,7 +48,7 @@ jobs:
         APK_DIR=android/build/outputs/apk/release
         APK_UNSIGNED="$APK_DIR/android-release-unsigned.apk"
         APK_SIGNED="$APK_DIR/android-release.apk"
-        APK_OUT="$APK_DIR/Unlucky.apk"
+        APK_OUT="$APK_DIR/K-Pop-Monster-Hunters.apk"
 
         if [ -n "${KEYSTORE_BASE64:-}" ]; then
           echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
@@ -73,8 +73,8 @@ jobs:
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Unlucky-APK
-        path: android/build/outputs/apk/release/Unlucky.apk
+        name: K-Pop-Monster-Hunters-APK
+        path: android/build/outputs/apk/release/K-Pop-Monster-Hunters.apk
         retention-days: 30
 
     - name: Get version

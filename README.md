@@ -1,4 +1,4 @@
-# 🎮 K-pop Monster Hunter Remix
+# 🎮 K Pop monster hunters
 
 > **A 2D action-platformer with rhythm-based combat, built for the MIFF (Make It For Free) movement**
 
@@ -8,7 +8,7 @@
 
 ## 🎵 About
 
-**K-pop Monster Hunter Remix** is an open-source 2D action-platformer that combines rhythm-based combat with monster hunting mechanics. Built on the LibGDX framework, it demonstrates how to create fully remixable games with automatic CI/CD, public keystores, and zero barriers to contribution.
+**K Pop monster hunters** is an open-source 2D action-platformer that combines rhythm-based combat with monster hunting mechanics. Built on the LibGDX framework, it demonstrates how to create fully remixable games with automatic CI/CD, public keystores, and zero barriers to contribution.
 
 ### 🌟 Features
 
