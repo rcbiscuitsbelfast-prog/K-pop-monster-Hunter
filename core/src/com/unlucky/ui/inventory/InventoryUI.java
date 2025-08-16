@@ -110,7 +110,7 @@ public class InventoryUI extends UI {
         for (int i = 0; i < headers.length; i++) {
             headers[i] = new Label(headerStrs[i], labelColors[0]);
             headers[i].setSize(62, 4);
-            headers[i].setFontScale(0.5f);
+            headers[i].setFontScale(0.4f);
             headers[i].setTouchable(Touchable.disabled);
             headers[i].setAlignment(Align.left);
         }
@@ -120,7 +120,7 @@ public class InventoryUI extends UI {
         for (int i = 0; i < stats.length; i++) {
             stats[i] = new Label("", labelColors[0]);
             stats[i].setSize(62, 4);
-            stats[i].setFontScale(0.5f);
+            stats[i].setFontScale(0.4f);
             stats[i].setTouchable(Touchable.disabled);
             stats[i].setAlignment(Align.left);
         }
@@ -147,7 +147,7 @@ public class InventoryUI extends UI {
             invButtons[i] = new ImageButton(disabled);
             invButtons[i].setTouchable(Touchable.disabled);
             invButtonLabels[i] = new Label(texts[i], labelColors[0]);
-            invButtonLabels[i].setFontScale(0.5f);
+            invButtonLabels[i].setFontScale(0.45f);
             invButtonLabels[i].setTouchable(Touchable.disabled);
             invButtonLabels[i].setSize(46, 14);
             invButtonLabels[i].setAlignment(Align.center);

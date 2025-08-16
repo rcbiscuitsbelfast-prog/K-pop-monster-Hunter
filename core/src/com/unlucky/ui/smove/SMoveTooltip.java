@@ -22,8 +22,8 @@ public class SMoveTooltip extends Window {
         this.ls = ls;
 
         desc = new Label("", skin);
-        desc.setFontScale(0.5f);
-        this.getTitleLabel().setFontScale(0.5f);
+        desc.setFontScale(0.4f);
+        this.getTitleLabel().setFontScale(0.4f);
         left();
         // fix padding because of scaling
         this.padTop(12);

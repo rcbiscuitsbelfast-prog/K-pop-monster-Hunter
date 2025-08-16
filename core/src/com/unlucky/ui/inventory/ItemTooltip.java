@@ -27,8 +27,8 @@ public class ItemTooltip extends Window {
     public ItemTooltip(Skin skin) {
         super("", skin);
         desc = new Label("", skin);
-        desc.setFontScale(0.5f);
-        this.getTitleLabel().setFontScale(0.5f);
+        desc.setFontScale(0.4f);
+        this.getTitleLabel().setFontScale(0.4f);
 
         common = new Label.LabelStyle(skin.getFont("default-font"), new Color(1, 1, 1, 1));
         rare = new Label.LabelStyle(skin.getFont("default-font"), new Color(0, 200 / 255.f, 0, 1));

@@ -75,15 +75,15 @@ public class Hud extends UI {
                 getButtonTable().defaults().width(50);
                 getButtonTable().defaults().height(15);
                 TextButton b = new TextButton("Back", rm.dialogSkin);
-                b.getLabel().setFontScale(0.75f);
+                b.getLabel().setFontScale(0.6f);
                 button(b, "back");
                 getButtonTable().padTop(-6).row();
                 TextButton s = new TextButton("Settings", rm.dialogSkin);
-                s.getLabel().setFontScale(0.75f);
+                s.getLabel().setFontScale(0.6f);
                 button(s, "settings");
                 getButtonTable().row();
                 TextButton q = new TextButton("Quit", rm.dialogSkin);
-                q.getLabel().setFontScale(0.75f);
+                q.getLabel().setFontScale(0.6f);
                 button(q, "quit");
             }
             @Override
@@ -260,14 +260,14 @@ public class Hud extends UI {
      */
     private void createLevelDescriptor() {
         levelDescriptor = new Window("", rm.skin);
-        levelDescriptor.getTitleLabel().setFontScale(0.5f);
+        levelDescriptor.getTitleLabel().setFontScale(0.4f);
         levelDescriptor.getTitleLabel().setAlignment(Align.center);
         levelDescriptor.setMovable(false);
         levelDescriptor.setTouchable(Touchable.disabled);
         levelDescriptor.setKeepWithinStage(false);
         levelDescriptor.setVisible(false);
         levelDesc = new Label("", new Label.LabelStyle(rm.pixel10, Color.WHITE));
-        levelDesc.setFontScale(0.5f);
+        levelDesc.setFontScale(0.4f);
         levelDesc.setAlignment(Align.center);
         levelDescriptor.left();
         levelDescriptor.padTop(12);
@@ -304,7 +304,7 @@ public class Hud extends UI {
         deathGroup.addActor(youDied);
 
         loss = new Label("", new Label.LabelStyle(rm.pixel10, Color.WHITE));
-        loss.setFontScale(0.5f);
+        loss.setFontScale(0.4f);
         loss.setWrap(true);
         loss.setSize(100, 40);
         loss.setAlignment(Align.top);

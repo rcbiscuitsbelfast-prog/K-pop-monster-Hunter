@@ -134,14 +134,14 @@ public class ShopScreen extends MenuExtensionScreen {
         headers = new Label[2];
         for (int i = 0; i < headers.length; i++) {
             headers[i] = new Label(headerStrs[i], whiteStyle);
-            headers[i].setFontScale(0.5f);
+            headers[i].setFontScale(0.4f);
             headers[i].setPosition(4 + 10 + (i * 109), 105);
             stage.addActor(headers[i]);
         }
 
         goldStyle = new Label.LabelStyle(rm.pixel10, new Color(1, 212 / 255.f, 0, 1));
         gold = new Label("", goldStyle);
-        gold.setFontScale(0.5f);
+        gold.setFontScale(0.4f);
         gold.setPosition(70, 109);
         stage.addActor(gold);
 
@@ -165,7 +165,7 @@ public class ShopScreen extends MenuExtensionScreen {
             invButtons[i].setTouchable(Touchable.disabled);
             invButtons[i].setPosition(13 + (i * 48), 10);
             invButtonLabels[i] = new Label("", whiteStyle);
-            invButtonLabels[i].setFontScale(0.5f);
+            invButtonLabels[i].setFontScale(0.45f);
             invButtonLabels[i].setTouchable(Touchable.disabled);
             invButtonLabels[i].setSize(46, 14);
             invButtonLabels[i].setAlignment(Align.center);
@@ -264,16 +264,16 @@ public class ShopScreen extends MenuExtensionScreen {
                 item.actor.setPosition(10, 3);
                 item.actor.setTouchable(Touchable.disabled);
                 Label itemName = new Label(item.labelName, Util.getItemColor(item.rarity, rm));
-                itemName.setFontScale(0.5f);
+                itemName.setFontScale(0.45f);
                 itemName.setTouchable(Touchable.disabled);
                 itemName.setAlignment(Align.left);
                 Label itemDesc = new Label(item.getFullDesc(), whiteStyle);
                 itemDesc.setWrap(true);
-                itemDesc.setFontScale(0.5f);
+                itemDesc.setFontScale(0.45f);
                 itemDesc.setTouchable(Touchable.disabled);
                 itemDesc.setAlignment(Align.left);
                 Label itemPrice = new Label("PRICE: " + item.price, goldStyle);
-                itemPrice.setFontScale(0.5f);
+                itemPrice.setFontScale(0.45f);
                 itemPrice.setTouchable(Touchable.disabled);
                 itemPrice.setAlignment(Align.left);
 

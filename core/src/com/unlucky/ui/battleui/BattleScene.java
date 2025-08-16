@@ -98,7 +98,7 @@ public class BattleScene extends BattleUI {
         playerHud = new MovingImageUI(rm.playerhpbar145x40, new Vector2(-72, 100), new Vector2(0, 100), 100.f, 72, 20);
         playerHpBar = new HealthBar(player, stage, shapeRenderer, 48, 4, new Vector2(), new Color(0, 225 / 255.f, 0, 1));
         playerHudLabel = new Label("", ls);
-        playerHudLabel.setFontScale(0.5f);
+        playerHudLabel.setFontScale(0.4f);
         playerHudLabel.setSize(49, 6);
         playerHudLabel.setTouchable(Touchable.disabled);
 
@@ -106,7 +106,7 @@ public class BattleScene extends BattleUI {
         enemyHud = new MovingImageUI(rm.enemyhpbar145x40, new Vector2(200, 100), new Vector2(128, 100), 100.f, 72, 20);
         enemyHpBar = new HealthBar(null, stage, shapeRenderer, 48, 4, new Vector2(), new Color(225 / 255.f, 0, 0, 1));
         enemyHudLabel = new Label("", ls);
-        enemyHudLabel.setFontScale(0.5f);
+        enemyHudLabel.setFontScale(0.4f);
         enemyHudLabel.setSize(49, 6);
         enemyHudLabel.setTouchable(Touchable.disabled);
 

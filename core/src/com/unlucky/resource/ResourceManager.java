@@ -190,7 +190,7 @@ public class ResourceManager {
         // load font using FreeType for modern font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/DejaVuSans-Bold.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 12;
+        parameter.size = 10;
         parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
         pixel10 = generator.generateFont(parameter);
         generator.dispose();
