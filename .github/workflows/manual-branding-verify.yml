@@ -1,0 +1,78 @@
+name: Manual APK Build - Branding Verify
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: Build type to generate
+        required: true
+        default: both
+        type: choice
+        options:
+          - debug
+          - release
+          - both
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: '35'
+          build-tools: '35.0.0'
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Clean
+        run: ./gradlew --no-daemon clean
+
+      - name: Build APK(s)
+        run: |
+          set -euo pipefail
+          case "${{ github.event.inputs.build_type }}" in
+            debug)
+              ./gradlew --no-daemon :android:assembleDebug
+              ;;
+            release)
+              ./gradlew --no-daemon :android:assembleRelease
+              ;;
+            *)
+              ./gradlew --no-daemon :android:assembleDebug :android:assembleRelease
+              ;;
+          esac
+
+      - name: Verify app label matches branding
+        run: |
+          set -euo pipefail
+          LABEL="K Pop monster hunters"
+          AAPT="$ANDROID_HOME"/build-tools/*/aapt
+          if [ -f android/build/outputs/apk/debug/android-debug.apk ]; then
+            $AAPT dump badging android/build/outputs/apk/debug/android-debug.apk | grep -E "application-label:'${LABEL}'"
+            echo "Debug APK label OK"
+          fi
+          if [ -f android/build/outputs/apk/release/android-release.apk ]; then
+            $AAPT dump badging android/build/outputs/apk/release/android-release.apk | grep -E "application-label:'${LABEL}'"
+            echo "Release APK label OK"
+          fi
+
+      - name: Upload APK(s)
+        uses: actions/upload-artifact@v4
+        with:
+          name: K-Pop-Monster-Hunters-APK-${{ github.event.inputs.build_type || 'both' }}
+          path: |
+            android/build/outputs/apk/debug/android-debug.apk
+            android/build/outputs/apk/release/android-release.apk
+          retention-days: 14
