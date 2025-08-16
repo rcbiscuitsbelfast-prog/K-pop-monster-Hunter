@@ -1,24 +1,13 @@
 name: Auto-Build K-pop Monster Hunter Remix APK
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ main, develop ]
-    paths:
-      - 'core/**'
-      - 'android/**'
-      - 'desktop/**'
-      - 'build.gradle'
-      - 'gradle.properties'
-      - 'settings.gradle'
   pull_request:
     branches: [ main, develop ]
-    paths:
-      - 'core/**'
-      - 'android/**'
-      - 'desktop/**'
-      - 'build.gradle'
-      - 'gradle.properties'
-      - 'settings.gradle'
   workflow_dispatch:
     inputs:
       build_type:
@@ -34,6 +23,10 @@ jobs:
   build-apk:
     name: Build and Sign APK
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version_info.outputs.version }}
+      commit_sha: ${{ steps.version_info.outputs.commit_sha }}
+      build_date: ${{ steps.version_info.outputs.build_date }}
     
     steps:
     - name: 🚀 Checkout code
@@ -100,9 +93,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: K-pop-Monster-Hunter-Remix-APK
-        path: |
-          android/build/outputs/apk/debug/android-debug.apk
-          android/build/outputs/apk/release/android-release.apk
+        path: android/build/outputs/apk/**/android-*.apk
+        if-no-files-found: error
         retention-days: 90
 
     - name: 🏷️ Generate version info
@@ -192,8 +184,7 @@ jobs:
         name: 🎮 K-pop Monster Hunter Remix v${{ needs.build-apk.outputs.version || '1.0.0' }}
         body_path: build-summary.md
         files: |
-          apks/android-release.apk
-          apks/android-debug.apk
+          apks/android/build/outputs/apk/**/android-*.apk
         draft: false
         prerelease: false
       env:
