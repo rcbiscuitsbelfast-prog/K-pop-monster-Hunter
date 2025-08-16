@@ -35,16 +35,16 @@ The README has been enhanced with comprehensive information about the current bu
 - **APK Availability**: Multiple download methods
 - **What's New**: Feature highlights
 
-## 🔗 **Direct APK Links Added**
+## 🔗 **APK Information Added**
 
 ### **Release APK (Recommended)**
-- **File**: [`android-release.apk`](android/build/outputs/apk/release/android-release.apk)
+- **File**: `android-release.apk`
 - **Size**: 8.5 MB
 - **Type**: Release (signed, optimized)
-- **Status**: Ready for installation
+- **Status**: Built locally - ready for distribution
 
 ### **Debug APK (Development)**
-- **File**: [`android-debug.apk`](android/build/outputs/apk/debug/android-debug.apk)
+- **File**: `android-debug.apk`
 - **Type**: Debug (unsigned, for testing)
 - **Status**: Available if built
 
@@ -57,19 +57,19 @@ The README has been enhanced with comprehensive information about the current bu
 - Installation instructions missing
 
 ### **After**
-- **One-click APK download** from README
-- **Clear build status** and APK availability
+- **Clear build status** and APK information
 - **Comprehensive installation guide**
-- **Multiple download options**
+- **Multiple ways to get the APK**
 - **Feature highlights** and system requirements
+- **Realistic expectations** about APK availability
 
 ## 🎯 **Benefits**
 
-1. **Faster Downloads**: Users can get APK immediately
-2. **Clear Status**: Build status is prominently displayed
-3. **Better UX**: Comprehensive download and installation guide
-4. **Transparency**: Users know exactly what they're downloading
-5. **Accessibility**: Multiple ways to access the APK
+1. **Clear Information**: Users know the current build status
+2. **Realistic Expectations**: No broken links or false promises
+3. **Better UX**: Comprehensive build and installation guide
+4. **Transparency**: Users understand how to get the APK
+5. **Multiple Options**: Different ways to obtain the APK
 
 ## 📋 **Files Modified**
 
@@ -78,4 +78,4 @@ The README has been enhanced with comprehensive information about the current bu
 
 ## 🚀 **Result**
 
-The README now provides a complete, user-friendly experience for downloading and installing the K-Pop Monster Hunter APK, with direct links to the most recent builds and comprehensive information about what's included.
+The README now provides accurate, realistic information about the current build status and multiple ways to obtain the K-Pop Monster Hunter APK. Users understand they need to build locally or get the APK from someone who has built it, with no broken links or false expectations.

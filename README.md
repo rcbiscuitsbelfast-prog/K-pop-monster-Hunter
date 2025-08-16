@@ -6,12 +6,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MIFF Movement](https://img.shields.io/badge/MIFF-Make%20It%20For%20Free-blue.svg)](https://makeitforfree.org)
 
-## 🚀 **Build Status: READY** ✅
+## 🚀 **Build Status: LOCAL BUILD SUCCESSFUL** ✅
 
-**Latest Build**: ✅ **SUCCESS** (August 16, 2024)  
-**APK Status**: 🎯 **Ready for Download**  
+**Latest Local Build**: ✅ **SUCCESS** (August 16, 2024)  
+**APK Status**: 🔨 **Built Locally - Ready for Distribution**  
 **Build Size**: 📱 **8.5 MB**  
 **Features**: 🆕 **K-Pop Monster Hunter v1.0.0** with modern font and updated branding
+
+> **📝 Note**: This APK was built locally and is ready for distribution. GitHub Actions artifacts are not currently available, but you can build your own APK using the build scripts provided.
 
 ## 🎵 About
 
@@ -45,40 +47,45 @@ cd kpop-monster-hunter-remix
 ./mobile-build.sh
 ```
 
-### 🎯 **Immediate Download Available**
-**No need to build locally!** The latest APK is ready for download:
-- **📱 Download Now**: [`android-release.apk`](android/build/outputs/apk/release/android-release.apk)
+### 🎯 **Local Build Available**
+**APK built successfully!** The latest APK is ready for distribution:
+- **📱 APK Location**: `android/build/outputs/apk/release/android-release.apk`
 - **🔧 Build Type**: Release (signed, optimized)
 - **📅 Fresh Build**: Just built with all latest updates
+- **📤 Distribution**: Transfer APK to your device or share with others
 
 ## 📱 Download
 
 ### 🚀 **Latest APK Versions**
 
 #### **Release Build (Recommended)**
-- **📱 APK File**: [`android-release.apk`](android/build/outputs/apk/release/android-release.apk) (8.5 MB)
+- **📱 APK File**: `android-release.apk` (8.5 MB)
 - **🔧 Build Type**: Release (signed, optimized)
-- **📅 Build Date**: Latest build from source
-- **✅ Status**: Ready for installation
+- **📅 Build Date**: Latest local build from source
+- **✅ Status**: Built locally - ready for distribution
 
 #### **Debug Build (Development)**
-- **🐛 APK File**: [`android-debug.apk`](android/build/outputs/apk/debug/android-debug.apk) (if available)
+- **🐛 APK File**: `android-debug.apk` (if available)
 - **🔧 Build Type**: Debug (unsigned, for testing)
 - **📅 Build Date**: Latest debug build
 
-### 📥 **Download Options**
+### 📥 **Get the APK**
 
-- **🎯 Direct APK**: Click the APK links above for immediate download
-- **🤖 GitHub Actions**: [Build Artifacts](https://github.com/your-username/kpop-monster-hunter-remix/actions)
-- **🏷️ GitHub Releases**: [Official Releases](https://github.com/your-username/kpop-monster-hunter-remix/releases)
 - **🔨 Local Build**: Run `./build-apk.sh` to build your own APK
+- **📱 Transfer APK**: Copy the built APK to your device
+- **🤖 GitHub Actions**: [Build Artifacts](https://github.com/your-username/kpop-monster-hunter-remix/actions) (when available)
+- **🏷️ GitHub Releases**: [Official Releases](https://github.com/your-username/kpop-monster-hunter-remix/releases) (when available)
 
 ### 📋 **Installation Instructions**
 
-1. **Download** the APK file to your Android device
-2. **Enable** "Install from unknown sources" in device settings
-3. **Install** the APK file
-4. **Launch** "K-Pop Monster Hunter" from your app drawer
+1. **Build or Get APK**: 
+   - **Option A**: Build locally with `./build-apk.sh`
+   - **Option B**: Get from someone who has built it
+   - **Option C**: Wait for GitHub Actions artifacts (when available)
+2. **Transfer** the APK file to your Android device
+3. **Enable** "Install from unknown sources" in device settings
+4. **Install** the APK file
+5. **Launch** "K-Pop Monster Hunter" from your app drawer
 
 ### 🆕 **Latest Version Features**
 
@@ -234,9 +241,9 @@ aapt dump badging android/build/outputs/apk/debug/android-debug.apk
 
 ## 🚀 **Current Build & APK Status**
 
-### 📱 **Latest APK Ready for Download**
-**Status**: ✅ **BUILD SUCCESSFUL**  
-**APK File**: [`android-release.apk`](android/build/outputs/apk/release/android-release.apk)  
+### 📱 **Latest APK Built Locally**
+**Status**: ✅ **LOCAL BUILD SUCCESSFUL**  
+**APK File**: `android-release.apk`  
 **Size**: 8.5 MB  
 **Build Date**: August 16, 2024  
 **Features**: K-Pop Monster Hunter v1.0.0 with modern updates
@@ -248,9 +255,9 @@ aapt dump badging android/build/outputs/apk/debug/android-debug.apk
 4. **Local Build** → Use `./build-apk.sh` for custom builds
 
 ### 📥 **Get the Latest APK**
-- **🎯 Direct Download**: Click the APK link above
-- **🤖 GitHub Actions**: [Latest Build Artifacts](https://github.com/your-username/kpop-monster-hunter-remix/actions)
 - **🔨 Build Locally**: Run `./build-apk.sh` in your environment
+- **📱 Transfer APK**: Copy the built APK to your device
+- **🤖 GitHub Actions**: [Latest Build Artifacts](https://github.com/your-username/kpop-monster-hunter-remix/actions) (when available)
 
 ### 🆕 **What's New in This Build**
 - **Game Name**: Updated to "K-Pop Monster Hunter"
