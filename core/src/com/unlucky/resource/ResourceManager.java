@@ -5,6 +5,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -145,7 +147,7 @@ public class ResourceManager {
     public final Array<Array<ShopItem>> shopItems = new Array<Array<ShopItem>>();
 
     // Fonts
-    public final BitmapFont pixel10;
+    public BitmapFont pixel10;
 
     public ResourceManager() {
         assetManager = new AssetManager();
@@ -185,8 +187,17 @@ public class ResourceManager {
 
         atlas = assetManager.get("textures.atlas", TextureAtlas.class);
 
-        // load font
-        pixel10 = new BitmapFont(Gdx.files.internal("fonts/pixel.fnt"), atlas.findRegion("pixel"), false);
+        // load modern TTF font if present; fallback to bundled pixel bitmap font
+        if (Gdx.files.internal("fonts/modern.ttf").exists()) {
+            FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("fonts/modern.ttf"));
+            FreeTypeFontParameter p = new FreeTypeFontParameter();
+            p.size = 18;
+            p.incremental = true;
+            pixel10 = gen.generateFont(p);
+            gen.dispose();
+        } else {
+            pixel10 = new BitmapFont(Gdx.files.internal("fonts/pixel.fnt"), atlas.findRegion("pixel"), false);
+        }
 
         skin = new Skin(atlas);
         skin.add("default-font", pixel10);
