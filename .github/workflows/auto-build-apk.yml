@@ -1,5 +1,8 @@
 name: Auto-Build K-pop Monster Hunter Remix APK
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ main, develop ]
