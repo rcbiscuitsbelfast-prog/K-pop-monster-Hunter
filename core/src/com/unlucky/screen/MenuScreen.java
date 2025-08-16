@@ -233,7 +233,7 @@ public class MenuScreen extends MenuExtensionScreen {
             }
         });
 
-        copyright = new Label("Unlucky V" + Unlucky.VERSION + "\nCopyright (c) 2018 Ming Li",
+        copyright = new Label("K-Pop Monster Hunter V" + Unlucky.VERSION + "\nCopyright (c) 2018 Ming Li",
             new Label.LabelStyle(rm.pixel10, Color.WHITE));
         copyright.setFontScale(0.75f);
         copyright.setPosition(53, 70);

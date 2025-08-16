@@ -1,0 +1,21 @@
+NEW APP ICON DESIGN
+
+The new app icon should be a simple, modern design featuring:
+
+1. Background: Solid purple color (#8A2BE2 or similar vibrant purple)
+2. Letter: Large, bold, white letter "K" 
+3. Style: Clean, minimalist design
+4. Shape: Square with rounded corners (standard Android app icon format)
+5. Sizes needed: 48x48, 72x72, 96x96, 144x144, 192x192 pixels
+
+The icon should replace the current shamrock image and represent the "K-Pop Monster Hunter" theme.
+
+To create this icon:
+1. Use a graphics editor like GIMP, Photoshop, or online tools like Canva
+2. Create a square canvas with the specified dimensions
+3. Fill with purple background
+4. Add a bold white "K" in the center
+5. Export as PNG files for each size
+6. Replace the ic_launcher.png files in each drawable directory
+
+This will give the app a modern, distinctive appearance that matches the new name and theme.

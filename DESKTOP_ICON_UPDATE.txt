@@ -1,0 +1,15 @@
+DESKTOP ICON UPDATES
+
+The desktop launcher references these icon files:
+- desktop_icon128.png
+- desktop_icon32.png  
+- desktop_icon16.png
+
+These should also be updated to match the new purple K theme for consistency.
+
+The desktop icons should use the same design as the mobile app icon:
+- Purple background (#8A2BE2)
+- Bold white "K" in the center
+- Clean, modern appearance
+
+Update both the mobile and desktop icons to maintain brand consistency across platforms.
