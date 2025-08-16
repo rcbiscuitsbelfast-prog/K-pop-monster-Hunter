@@ -31,9 +31,8 @@ public class MenuScreen extends MenuExtensionScreen {
 	// 2 - slide in left
 	public int transitionIn = 0;
 
-	// title animation (each letter moves down at descending speeds)
-	private Moving[] titleMoves;
-	private Image[] letters;
+	// text title label
+	private Label titleLabel;
 
 	// label style
 	private Label.LabelStyle menuStyle;
@@ -62,14 +61,13 @@ public class MenuScreen extends MenuExtensionScreen {
 
 		menuStyle = new Label.LabelStyle(rm.pixel10, new Color(79 / 255.f, 79 / 255.f, 117 / 255.f, 1));
 
-		// one for each letter
-		titleMoves = new Moving[7];
-		letters = new Image[7];
-		for (int i = 0; i < 7; i++) {
-			titleMoves[i] = new Moving(new Vector2(), new Vector2(), 0);
-			letters[i] = new Image(rm.title[i]);
-			stage.addActor(letters[i]);
-		}
+		// Title text instead of static image
+		Label.LabelStyle titleStyle = new Label.LabelStyle(rm.pixel10, Color.WHITE);
+		titleLabel = new Label("K Pop monster hunters", titleStyle);
+		titleLabel.setFontScale(2.0f);
+		titleLabel.setAlignment(Align.center);
+		titleLabel.setPosition(Unlucky.V_WIDTH / 2f - 60, 92);
+		stage.addActor(titleLabel);
 
 		handlePlayButton();
 		handleOptionButtons();
@@ -293,23 +291,13 @@ public class MenuScreen extends MenuExtensionScreen {
 	}
 
 	public void update(float dt) {
-		for (int i = 0; i < 7; i++) {
-			titleMoves[i].update(dt);
-			letters[i].setPosition(titleMoves[i].position.x, titleMoves[i].position.y);
-		}
+		// no per-letter animation when using text title
 	}
 	/**
 	 * Resets and starts the title animation on every transition to this screen
 	 */
 	private void resetTitleAnimation() {
-		// entire title text starts at x = 74
-		for (int i = 0; i < titleMoves.length; i++) {
-			titleMoves[i].origin.set(new Vector2(37 + i * 18, 120 + 24));
-			titleMoves[i].target.set(new Vector2(37 + i * 18, 120 - 35));
-			titleMoves[i].speed = (275 - i * 24) / 2;
-			titleMoves[i].horizontal = false;
-			titleMoves[i].start();
-		}
+		// no-op for text title
 	}
 
 }
