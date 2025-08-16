@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.unlucky.main.Unlucky;
 import com.unlucky.resource.ResourceManager;
@@ -40,8 +40,8 @@ public abstract class AbstractScreen implements Screen {
 
         cam = new OrthographicCamera(Unlucky.V_WIDTH, Unlucky.V_HEIGHT);
         cam.setToOrtho(false);
-        // the game will retain it's scaled dimensions regardless of resizing
-        viewport = new StretchViewport(Unlucky.V_WIDTH, Unlucky.V_HEIGHT, cam);
+        // keep aspect ratio while adapting to orientation changes
+        viewport = new FitViewport(Unlucky.V_WIDTH, Unlucky.V_HEIGHT, cam);
 
         stage = new Stage(viewport, game.batch);
     }
@@ -53,7 +53,9 @@ public abstract class AbstractScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
 
     @Override
     public void show() {}
