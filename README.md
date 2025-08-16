@@ -49,7 +49,7 @@ cd kpop-monster-hunter-remix
 
 ### 🎯 **Local Build Available**
 **APK built successfully!** The latest APK is ready for distribution:
-- **📱 APK Location**: `android/build/outputs/apk/release/android-release.apk`
+- **📱 APK File**: `android-release.apk` (8.5 MB)
 - **🔧 Build Type**: Release (signed, optimized)
 - **📅 Fresh Build**: Just built with all latest updates
 - **📤 Distribution**: Transfer APK to your device or share with others
@@ -233,7 +233,7 @@ cd kpop-monster-hunter-remix
 ./gradlew :android:assembleDebug --info
 
 # Check APK contents
-aapt dump badging android/build/outputs/apk/debug/android-debug.apk
+aapt dump badging android-debug.apk
 
 # Install and run on device
 ./gradlew :android:installDebug
