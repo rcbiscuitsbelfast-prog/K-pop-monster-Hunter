@@ -1,4 +1,4 @@
-# 🎮 K-pop Monster Hunter Remix - Remix Guide
+# 🎮 Unlucky - Remix Guide
 
 ## 🎵 Welcome to the MIFF Movement!
 
@@ -14,8 +14,8 @@
 ### One-Command Build
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/unlucky.git
+cd unlucky
 
 # Build APK (automatically signed with public keystore)
 ./build-apk.sh

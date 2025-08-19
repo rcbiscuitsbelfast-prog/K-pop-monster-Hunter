@@ -4,15 +4,15 @@
 
 ### Android App Name
 - **File**: `android/res/values/strings.xml`
-- **Change**: Updated `app_name` from "Unlucky" to "K-Pop Monster Hunter"
+- **Change**: Reverted `app_name` from "K-Pop Monster Hunter" back to "Unlucky"
 
 ### Game Title
 - **File**: `core/src/com/unlucky/main/Unlucky.java`
-- **Change**: Updated `TITLE` constant from "Unlucky Version X" to "K-Pop Monster Hunter Version X"
+- **Change**: Reverted `TITLE` constant to "Unlucky Version X"
 
 ### Copyright Text
 - **File**: `core/src/com/unlucky/screen/MenuScreen.java`
-- **Change**: Updated copyright label from "Unlucky VX" to "K-Pop Monster Hunter VX"
+- **Change**: Reverted copyright label to "Unlucky VX"
 
 ## 2. Font Updates
 

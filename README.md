@@ -1,4 +1,4 @@
-# 🎮 K-pop Monster Hunter Remix
+# 🎮 Unlucky
 
 > **A 2D action-platformer with rhythm-based combat, built for the MIFF (Make It For Free) movement**
 
@@ -8,7 +8,7 @@
 
 ## 🎵 About
 
-**K-pop Monster Hunter Remix** is an open-source 2D action-platformer that combines rhythm-based combat with monster hunting mechanics. Built on the LibGDX framework, it demonstrates how to create fully remixable games with automatic CI/CD, public keystores, and zero barriers to contribution.
+**Unlucky** is an open-source 2D action-RPG/dungeon crawler based on RNG. Built on the LibGDX framework, it demonstrates how to create fully remixable games with automatic CI/CD, public keystores, and zero barriers to contribution.
 
 ### 🌟 Features
 
@@ -24,8 +24,8 @@
 ### One-Command Build
 ```bash
 # Clone and build
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/unlucky.git
+cd unlucky
 ./build-apk.sh
 ```
 
@@ -33,8 +33,8 @@ cd kpop-monster-hunter-remix
 ```bash
 # Install on Android device
 pkg install openjdk-17 gradle git
-git clone https://github.com/your-username/kpop-monster-hunter-remix.git
-cd kpop-monster-hunter-remix
+git clone https://github.com/your-username/unlucky.git
+cd unlucky
 ./mobile-build.sh
 ```
 
