@@ -13,7 +13,7 @@ public class MenuScreen extends BaseScreen {
     }
 
     private void createTitleLabel() {
-        titleLabel = new Label("K-pop monster hunter", new Label.LabelStyle(yourFont, yourColor));
+        titleLabel = new Label("Unlucky", new Label.LabelStyle(yourFont, yourColor));
         titleLabel.setFontScale(0.5f); // Adjust the scale as necessary
         titleLabel.setPosition((viewport.getWorldWidth() - titleLabel.getWidth()) / 2, viewport.getWorldHeight() - titleLabel.getHeight() - 20);
         stage.addActor(titleLabel);

@@ -1,8 +1,8 @@
-# 🎮 K-pop Monster Hunter Remix - Setup Summary
+# 🎮 Unlucky - Setup Summary
 
 ## 🎯 What We Built
 
-A complete CI/CD pipeline for the **K-pop Monster Hunter Remix** project that demonstrates the **MIFF (Make It For Free)** movement principles:
+A complete CI/CD pipeline for the **Unlucky** project that demonstrates the **MIFF (Make It For Free)** movement principles:
 
 - ✅ **Public Keystore**: No secrets, no private keys
 - ✅ **Auto-Build**: APKs built on every code change
@@ -13,7 +13,7 @@ A complete CI/CD pipeline for the **K-pop Monster Hunter Remix** project that de
 ## 📁 Project Structure
 
 ```
-kpop-monster-hunter-remix/
+unlucky/
 ├── android/
 │   ├── keystore/
 │   │   └── open-remix.keystore    # 🔑 Public keystore

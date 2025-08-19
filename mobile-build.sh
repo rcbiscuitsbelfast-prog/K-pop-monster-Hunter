@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Mobile Build Script for K-pop Monster Hunter Remix
+# Mobile Build Script for Unlucky
 # Optimized for Termux and mobile development environments
 # Part of the MIFF (Make It For Free) movement
 
 set -euo pipefail
 
-echo "📱 Mobile Build Script for K-pop Monster Hunter Remix"
+echo "📱 Mobile Build Script for Unlucky"
 echo "🎵 MIFF Movement - Building games on mobile!"
 
 # Check if we're in a mobile environment

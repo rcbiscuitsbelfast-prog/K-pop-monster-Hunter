@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Build APK script for K-pop Monster Hunter Remix (MIFF Movement)
+# Build APK script for Unlucky
 # Public keystore, no secrets, no barriers to remixing!
 set -euo pipefail
 
-echo "🎮 Building K-pop Monster Hunter Remix Android APK..."
+echo "🎮 Building Unlucky Android APK..."
 echo "🎵 Part of the MIFF (Make It For Free) movement!"
 
 # Ensure gradlew is executable
@@ -45,7 +45,7 @@ if [ -f "$APK_PATH" ]; then
     fi
     
     echo ""
-    echo "🎉 Build complete! Ready for rhythm-based monster hunting!"
+    echo "🎉 Build complete! Ready to play Unlucky!"
     echo ""
     echo "📋 Installation:"
     echo "   1. Transfer APK to your Android 8.0+ device"
